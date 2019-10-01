@@ -19,7 +19,7 @@ That is why I decided to take an other direction :
 I am IN LOVE with a particular HTML / CSS / Javascript (Typescript) framework, [Angular](https://angular.io), for the following reasons :
 * Web-based frameworks are extremely user-friendly,
 * [NPM](https://www.npmjs.com/) is full of AMAZING copyright-free libraries,
-* [Electron](https://electronjs.org/) enables you to compile ANY Angular project into desktop apps for all Windows, Mac and Linux platforms, (just like [Ionic](https://ionicframework.com) for mobile app versions),
+* [Electron](https://electronjs.org/) enables you to compile ANY Angular project into desktop apps for all Windows, Mac and Linux platforms with [Electron-builder](https://www.electron.build/), (just like [Ionic](https://ionicframework.com) for mobile app versions),
 * [Typescript](http://www.typescriptlang.org/) as a GREAT web-based language that enables you to interface your app with any running server (see below).
 
 ### Software architecture
@@ -63,7 +63,7 @@ Processing request: |        | Algorithm results:
              |Algorithm 3|Algorithm 4|
              +-----------------------+
 ```
-* __Front-end__ : Angular App (compiled into a single executable using [Electron](https://electronjs.org/)),
+* __Front-end__ : Angular App (compiled into a single executable using [Electron](https://electronjs.org/) & [Electron-builder](https://www.electron.build/)),
 * __Back-end__ : Python server (compiled into a single executable using [PyInstaller](https://www.pyinstaller.org/)).
 
 __All you need to do is download the two executable files, and launch them individually !__   
@@ -81,6 +81,7 @@ __Front-end:__
 * [Angular](https://angular.io),
 * [Angular Material](https://material.angular.io/),
 * [Electron](https://electronjs.org/),
+* [Electron-builder](https://www.electron.build/),
 * [Jimp](https://www.npmjs.com/package/jimp),
 * [Chart.js](https://www.chartjs.org/),
 
@@ -100,10 +101,10 @@ Install __NodeJS__ (that will automatically install __npm__), and [Angular](http
 git clone https://github.com/polofgrs/Computer-Vision-Emergency-Response-Toolkit.git
 cd CVERT-ng
 npm i
-ng run electron
+npm run electron
 ```
 __Back-end:__   
-Install [Python 3.6](https://www.python.org/), then the packages in `/python-server/packages.py`, then run the server with :
+Install [Python 3.6](https://www.python.org/), then the packages in `/python-server/packages.py` *(not yet implemented)*, then run the server with :
 ```bash
 cd python-server
 python3 server.py
