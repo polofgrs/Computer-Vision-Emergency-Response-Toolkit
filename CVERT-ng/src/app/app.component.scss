@@ -2,10 +2,16 @@ html, body {
   height: 100%;
 }
 
+img {
+  height: 90%;
+  box-shadow: 0px 0px 10px 3px #000000;
+}
+
 .row {
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: rgba(50, 50, 50, 1);
 }
 
 .full-height {
@@ -17,15 +23,18 @@ html, body {
 }
 
 #left-panel > * {
-  border: 1px solid #ff0000;
+  border: 1px solid #000000;
+  color: #ffffff;
 }
 
 #center-panel > * {
-  border: 1px solid #00ff00;
+  border: 1px solid #000000;
+  color: #ffffff;
 }
 
 #right-panel > * {
-  border: 1px solid #0000ff;
+  border: 1px solid #000000;
+  color: #ffffff;
 }
 
 #filters-tab {
@@ -42,6 +51,12 @@ html, body {
 
 #top-picture, #bottom-picture {
   height: 50%;
+}
+
+#top-image, #bottom-image  {
+  height: 100%;
+  width: 100%;
+  text-align: center;
 }
 
 #right-panel > * {

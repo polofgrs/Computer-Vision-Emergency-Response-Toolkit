@@ -3,37 +3,37 @@
 
     <div class="col-3 full-height" id="left-panel">
       <div class="row" id="filters-tab">
-        filters tab
+        <app-filters-tab></app-filters-tab>
       </div>
       <div class="row" id="filter-edit">
-        filter-edit tab
+        <app-filter-edit-tab></app-filter-edit-tab>
       </div>
       <div class="row" id="server-tab">
-        server actions & status tab
+        <app-server-tab></app-server-tab>
       </div>
     </div>
 
     <div class="col-6 full-height" id="center-panel">
       <div class="row" id="top-picture">
-        Top picture (original)
+        <app-image-tab [uri]="topImageUri" id="top-image"></app-image-tab>
       </div>
       <div class="row" id="bottom-picture">
-        Bottom picture (processed)
+        <app-image-tab [uri]="topImageUri" id="bottom-image"></app-image-tab>
       </div>
     </div>
 
     <div class="col-3 full-height" id="right-panel">
       <div class="row" id="GPS-tab">
-        GPS tab (cat. 2)
+        <app-gps-tab></app-gps-tab>
       </div>
       <div class="row" id="top-histogram">
-        top picture histogram (chart.js)
+        <app-histogram-tab [histogramData]="topImageHistogram"></app-histogram-tab>
       </div>
       <div class="row" id="bottom-histogram">
-        bottom picture histogram (chart.js)
+        <app-histogram-tab [histogramData]="bottomImageHistogram"></app-histogram-tab>
       </div>
       <div class="row" id="actions-tab">
-        action buttons tab
+        <app-action-tab></app-action-tab>
       </div>
     </div>
 
