@@ -20,7 +20,7 @@ export class HistogramTabComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['histogramData'].currentValue) {
-      console.log(this.histogramData[0]);
+      // console.log(this.histogramData[0]);
       this.chart = new Chart(this.histogramCanvas.nativeElement, {
         type: "line",
         data: {
@@ -41,6 +41,14 @@ export class HistogramTabComponent implements OnInit, OnChanges {
         options: {
           responsive: true,
           maintainAspectRatio: false,
+          layout: {
+            padding: {
+              left: 20,
+              right: 20,
+              top: 20,
+              bottom: 20
+            }
+          },
           elements: {
             point: {
               radius: 0

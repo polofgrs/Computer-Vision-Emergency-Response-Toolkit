@@ -1,3 +1,7 @@
-<p>
-  filters-tab works!
-</p>
+<p>Filters</p>
+
+<div cdkDropList class="filters-list mx-auto" (cdkDropListDropped)="drop($event)">
+  <div class="filters-item mx-1 my-1" *ngFor="let filter of filtersList" cdkDrag>
+    {{filter.name}}
+  </div>
+</div>

@@ -1,18 +1,23 @@
-import { MatButtonModule, MatCheckboxModule, MatIconModule, MatGridListModule } from '@angular/material';
+// import { MatButtonModule, MatCheckboxModule, MatIconModule, MatGridListModule } from '@angular/material';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+
 import { NgModule } from '@angular/core';
 
 @NgModule ({
   imports: [
-    MatButtonModule,
+    DragDropModule
+    /*MatButtonModule,
     MatCheckboxModule,
     MatIconModule,
-    MatGridListModule
+    MatGridListModule*/
   ],
   exports: [
-    MatButtonModule,
+    DragDropModule
+    // CdkDragDrop,
+    /*MatButtonModule,
     MatCheckboxModule,
     MatIconModule,
-    MatGridListModule
+    MatGridListModule*/
   ]
 })
 

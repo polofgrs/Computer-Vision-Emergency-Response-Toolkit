@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { ImageService } from './services/image.service';
+import { Filter } from './classes/filter';
 
 @Component({
   selector: 'app-root',
@@ -16,9 +17,14 @@ export class AppComponent implements OnInit {
   bottomImageUri: string;
   bottomImageHistogram: number[][];
 
+  filtersList: Array<Filter>;
+  currentFilter: Filter;
+
   constructor(private imageService: ImageService) {
     this.topImageUri = "../assets/cache/test.JPG";
     this.bottomImageUri = "../assets/cache/test.JPG";
+    this.currentFilter = new Filter('testFilter');
+    this.filtersList = [this.currentFilter, new Filter('testFilter2'), new Filter('testFilter3')];
   }
 
   ngOnInit() {

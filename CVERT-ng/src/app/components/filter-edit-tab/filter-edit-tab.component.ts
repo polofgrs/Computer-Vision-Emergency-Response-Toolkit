@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+
+import { Filter } from '../../classes/filter';
 
 @Component({
   selector: 'app-filter-edit-tab',
@@ -6,6 +8,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./filter-edit-tab.component.scss']
 })
 export class FilterEditTabComponent implements OnInit {
+
+  @Input() currentFilter: Filter;
 
   constructor() { }
 
