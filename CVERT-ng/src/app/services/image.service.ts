@@ -1,15 +1,22 @@
 import { Injectable, OnInit } from '@angular/core';
 import { Observable, Observer } from 'rxjs';
 
+import { UriService } from './uri.service';
+
+import Jimp from 'jimp';
+
 @Injectable({
   providedIn: 'root'
 })
 export class ImageService implements OnInit {
 
-  constructor() {
+  sourceImage: Jimp;
+
+  constructor(private uriService: UriService) {
   }
 
   ngOnInit() {
+    this.loadSourceImage(this.uriService.getTopImageUri());
   }
 
   getHistogram(uri: string) : Observable<number[][]> {
@@ -63,6 +70,17 @@ export class ImageService implements OnInit {
     var arr = [];
     for (var i=0; i<256; i++) { arr[i] = default_value; }
     return arr;
+  }
+
+  loadSourceImage(uri: string) {
+    Jimp.read(this.uriService.getTopImageUri())
+      .then(image => {
+        this.sourceImage = image;
+        console.log(image);
+      })
+      .catch(err => {
+        console.log(err);
+      })
   }
 
 }

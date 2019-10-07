@@ -16,6 +16,7 @@ export class FiltersTabComponent implements OnInit {
   @Input() bottomImageUri: string;
 
   @Input() filtersList: Array<Filter>;
+  @Input() currentFilter: Filter;
 
   sourceImage: Jimp;
 
@@ -39,6 +40,19 @@ export class FiltersTabComponent implements OnInit {
   drop(event: CdkDragDrop<string[]>) {
     moveItemInArray(this.filtersList, event.previousIndex, event.currentIndex);
     console.log(this.filtersList);
+  }
+
+  addFilter() {
+    console.log('add filter');
+  }
+
+  editFilter(filter: Filter) {
+    this.currentFilter = filter;
+    console.log(filter);
+  }
+
+  removeFilterFromList(filter: Filter) {
+    console.log(filter);
   }
 
 }

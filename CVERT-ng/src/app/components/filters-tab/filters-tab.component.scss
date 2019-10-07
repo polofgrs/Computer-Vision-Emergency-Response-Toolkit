@@ -1,5 +1,6 @@
 .filters-list {
   width: 90%;
+  height: 90%;
   border: solid 2px #444;
   min-height: 60px;
   // display: block;
@@ -12,15 +13,30 @@
   //padding: 20px 10px;
   border: solid 1px #888;
   // color: rgba(0, 0, 0, 0.87);
-  //display: flex;
-  //flex-direction: row;
-  //align-items: center;
-  //justify-content: space-between;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
   //box-sizing: border-box;
   cursor: move;
-  background: #444444;
+  background: #444;
   //font-size: 14px;
   border-radius: 4px;
+}
+
+.add-filter-item {
+  color: #999;
+  border: solid 1px #666;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  background: #333;
+  border-radius: 4px;
+}
+
+.delete-icon, .add-icon, .edit-icon {
+  cursor: pointer;
 }
 
 .cdk-drag-preview {

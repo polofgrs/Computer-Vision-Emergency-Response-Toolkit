@@ -4,12 +4,13 @@
     <div class="col-3 full-height" id="left-panel">
       <div class="row" id="filters-tab">
         <app-filters-tab class="full-width full-heigth"
-                         [topImageUri]="topImageUri"
-                         [bottomImageUri]="bottomImageUri"
-                         [filtersList]="filtersList"></app-filters-tab>
+                         [(topImageUri)]="topImageUri"
+                         [(bottomImageUri)]="bottomImageUri"
+                         [(filtersList)]="filtersList"
+                         [(currentFilter)]="currentFilter"></app-filters-tab>
       </div>
       <div class="row" id="filter-edit">
-        <app-filter-edit-tab [currentFilter]="currentFilter"></app-filter-edit-tab>
+        <app-filter-edit-tab [(currentFilter)]="currentFilter"></app-filter-edit-tab>
       </div>
       <div class="row" id="server-tab">
         <app-server-tab></app-server-tab>
@@ -18,10 +19,10 @@
 
     <div class="col-6 full-height" id="center-panel">
       <div class="row" id="top-picture">
-        <app-image-tab [uri]="topImageUri" id="top-image"></app-image-tab>
+        <app-image-tab [(uri)]="topImageUri" id="top-image"></app-image-tab>
       </div>
       <div class="row" id="bottom-picture">
-        <app-image-tab [uri]="topImageUri" id="bottom-image"></app-image-tab>
+        <app-image-tab [(uri)]="topImageUri" id="bottom-image"></app-image-tab>
       </div>
     </div>
 
@@ -30,10 +31,10 @@
         <app-gps-tab></app-gps-tab>
       </div>
       <div class="row" id="top-histogram">
-        <app-histogram-tab class="full-height full-width" [histogramData]="topImageHistogram"></app-histogram-tab>
+        <app-histogram-tab class="full-height full-width" [(histogramData)]="topImageHistogram"></app-histogram-tab>
       </div>
       <div class="row" id="bottom-histogram">
-        <app-histogram-tab class="full-height full-width" [histogramData]="bottomImageHistogram"></app-histogram-tab>
+        <app-histogram-tab class="full-height full-width" [(histogramData)]="bottomImageHistogram"></app-histogram-tab>
       </div>
       <div class="row" id="actions-tab">
         <app-action-tab></app-action-tab>
