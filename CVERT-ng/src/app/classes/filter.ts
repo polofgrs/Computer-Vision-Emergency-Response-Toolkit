@@ -1,9 +1,11 @@
 export class Filter {
 
+  filter: any;
   name: string;
 
-  constructor(name: string) {
-    this.name = name;
+  constructor(filter) {
+    this.name = "New Filter";
+    this.filter = JSON.parse(JSON.stringify(filter));
   }
 
 }

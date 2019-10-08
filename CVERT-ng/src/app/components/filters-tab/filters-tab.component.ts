@@ -4,6 +4,7 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Filter } from '../../classes/filter';
 
 import Jimp from 'jimp';
+import * as assets from '../../../assets/assets.json';
 
 @Component({
   selector: 'app-filters-tab',
@@ -14,7 +15,7 @@ export class FiltersTabComponent implements OnInit {
 
   @Input() topImageUri: string;
   @Output() topImageUriChange = new EventEmitter();
-  
+
   @Input() bottomImageUri: string;
   @Output() bottomImageUriChange = new EventEmitter();
 
@@ -50,17 +51,27 @@ export class FiltersTabComponent implements OnInit {
   }
 
   addFilter() {
-    console.log('add filter');
+    this.filtersList.push(new Filter(assets.filters[0]));
+    this.filterListChange.emit(this.filtersList);
+    this.currentFilter = this.filtersList[this.filtersList.length-1];
+    this.currentFilterChange.emit(this.currentFilter);
+    // console.log('add filter');
   }
 
   editFilter(filter: Filter) {
     this.currentFilter = filter;
-    console.log(filter);
     this.currentFilterChange.emit(this.currentFilter);
+    // console.log(filter);
   }
 
   removeFilterFromList(filter: Filter) {
-    console.log(filter);
+    if (this.currentFilter == filter) {
+      this.currentFilter = undefined;
+      this.currentFilterChange.emit(this.currentFilter);
+    }
+    this.filtersList.splice(this.filtersList.indexOf(filter), 1);
+    this.filterListChange.emit(this.filtersList);
+    // console.log(filter);
   }
 
 }

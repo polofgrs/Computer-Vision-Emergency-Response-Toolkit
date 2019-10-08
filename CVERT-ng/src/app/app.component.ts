@@ -23,8 +23,8 @@ export class AppComponent implements OnInit {
   constructor(private imageService: ImageService) {
     this.topImageUri = "../assets/cache/test.JPG";
     this.bottomImageUri = "../assets/cache/test.JPG";
-    this.currentFilter = new Filter('testFilter');
-    this.filtersList = [this.currentFilter, new Filter('testFilter2'), new Filter('testFilter3')];
+    // this.currentFilter = new Filter('testFilter');
+    this.filtersList = new Array<Filter>();
   }
 
   ngOnInit() {

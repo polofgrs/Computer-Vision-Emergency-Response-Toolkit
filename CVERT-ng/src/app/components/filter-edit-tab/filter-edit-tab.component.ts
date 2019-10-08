@@ -1,6 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 import { Filter } from '../../classes/filter';
+import * as assets from '../../../assets/assets.json';
 
 @Component({
   selector: 'app-filter-edit-tab',
@@ -10,10 +11,27 @@ import { Filter } from '../../classes/filter';
 export class FilterEditTabComponent implements OnInit {
 
   @Input() currentFilter: Filter;
+  @Output() currentFilterChange = new EventEmitter();
 
-  constructor() { }
+  filters: any;
+
+  constructor() {
+    this.filters = assets.filters;
+    console.log(this.filters);
+  }
 
   ngOnInit() {
+  }
+
+  changeFilter() {
+    this.currentFilter.filter = JSON.parse(JSON.stringify(
+      this.filters.find(
+        filterItem => {
+          return filterItem.name == this.currentFilter.filter.name;
+        }
+      )
+    ));
+    this.currentFilterChange.emit(this.currentFilter);
   }
 
 }
