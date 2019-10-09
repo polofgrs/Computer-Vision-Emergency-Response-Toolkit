@@ -2,6 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 import { Filter } from '../../classes/filter';
+import { ImageInstance } from '../../classes/imageInstance';
 
 import Jimp from 'jimp';
 import * as assets from '../../../assets/assets.json';
@@ -13,11 +14,11 @@ import * as assets from '../../../assets/assets.json';
 })
 export class FiltersTabComponent implements OnInit {
 
-  @Input() topImageUri: string;
-  @Output() topImageUriChange = new EventEmitter();
+  @Input() topImage: ImageInstance;
+  @Output() topImageChange = new EventEmitter();
 
-  @Input() bottomImageUri: string;
-  @Output() bottomImageUriChange = new EventEmitter();
+  @Input() bottomImage: ImageInstance;
+  @Output() bottomImageChange = new EventEmitter();
 
   @Input() filtersList: Array<Filter>;
   @Output() filterListChange = new EventEmitter();
@@ -30,18 +31,6 @@ export class FiltersTabComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    this.loadSourceImage();
-  }
-
-  loadSourceImage() {
-    Jimp.read(this.topImageUri)
-      .then(image => {
-        this.sourceImage = image;
-        console.log(image);
-      })
-      .catch(err => {
-        console.log(err);
-      })
   }
 
   drop(event: CdkDragDrop<string[]>) {
@@ -72,6 +61,13 @@ export class FiltersTabComponent implements OnInit {
     this.filtersList.splice(this.filtersList.indexOf(filter), 1);
     this.filterListChange.emit(this.filtersList);
     // console.log(filter);
+  }
+
+  applyFilters() {
+    var update = this.topImage.applyFilterList(this.filtersList)
+    this.bottomImage.update(update);
+    this.bottomImageChange.emit(this.bottomImage);
+    // console.log(this.bottomImage);
   }
 
 }

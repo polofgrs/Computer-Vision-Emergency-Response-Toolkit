@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
-import { ImageService } from './services/image.service';
 import { Filter } from './classes/filter';
+import { ImageInstance } from './classes/imageInstance';
 
 @Component({
   selector: 'app-root',
@@ -11,30 +11,18 @@ import { Filter } from './classes/filter';
 
 export class AppComponent implements OnInit {
 
-  topImageUri: string;
-  topImageHistogram: number[][];
-
-  bottomImageUri: string;
-  bottomImageHistogram: number[][];
+  topImage: ImageInstance;
+  bottomImage: ImageInstance;
 
   filtersList: Array<Filter>;
   currentFilter: Filter;
 
-  constructor(private imageService: ImageService) {
-    this.topImageUri = "../assets/cache/test.JPG";
-    this.bottomImageUri = "../assets/cache/test.JPG";
-    // this.currentFilter = new Filter('testFilter');
+  constructor() {
+    this.topImage = new ImageInstance("assets/cache/test.JPG");
+    this.bottomImage = new ImageInstance("assets/cache/test.JPG");
     this.filtersList = new Array<Filter>();
   }
 
   ngOnInit() {
-
-    this.imageService.getHistogram(this.topImageUri).subscribe( data => {
-      this.topImageHistogram = data;
-    });
-
-    this.imageService.getHistogram(this.bottomImageUri).subscribe( data => {
-      this.bottomImageHistogram = data;
-    });
   }
 }

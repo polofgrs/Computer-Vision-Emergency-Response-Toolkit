@@ -17,7 +17,7 @@ export class FilterEditTabComponent implements OnInit {
 
   constructor() {
     this.filters = assets.filters;
-    console.log(this.filters);
+    // console.log(this.filters);
   }
 
   ngOnInit() {

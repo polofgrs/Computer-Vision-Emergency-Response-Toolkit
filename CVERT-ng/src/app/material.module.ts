@@ -1,4 +1,4 @@
-import { MatIconModule, MatInputModule, MatSelectModule, MatSliderModule } from '@angular/material';
+import { MatIconModule, MatInputModule, MatSelectModule, MatSliderModule, MatButtonModule } from '@angular/material';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 
 import { NgModule } from '@angular/core';
@@ -10,6 +10,7 @@ import { NgModule } from '@angular/core';
     MatInputModule,
     MatSelectModule,
     MatSliderModule,
+    MatButtonModule
   ],
   exports: [
     DragDropModule,
@@ -17,6 +18,7 @@ import { NgModule } from '@angular/core';
     MatInputModule,
     MatSelectModule,
     MatSliderModule,
+    MatButtonModule
   ]
 })
 

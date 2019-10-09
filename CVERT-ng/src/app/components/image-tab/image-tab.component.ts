@@ -1,5 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 
+import { ImageInstance } from '../../classes/imageInstance';
+
 @Component({
   selector: 'app-image-tab',
   templateUrl: './image-tab.component.html',
@@ -7,7 +9,7 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class ImageTabComponent implements OnInit {
 
-  @Input() uri: string;
+  @Input() image: ImageInstance;
 
   constructor() { }
 

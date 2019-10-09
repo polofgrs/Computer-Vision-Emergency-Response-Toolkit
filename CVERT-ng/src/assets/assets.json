@@ -72,7 +72,7 @@
     ]
   },
   {
-    "name": "spin / hue",
+    "name": "hue",
     "args": [
       {
         "name": "degree",

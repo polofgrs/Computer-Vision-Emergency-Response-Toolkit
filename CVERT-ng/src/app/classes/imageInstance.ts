@@ -1,15 +1,52 @@
-import { Injectable, OnInit } from '@angular/core';
 import { Observable, Observer } from 'rxjs';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class ImageService implements OnInit {
+import Jimp from 'jimp';
+import { Filter } from './filter';
 
-  constructor() {
+export class ImageInstance {
+
+  jimpObject: any;
+  uri: string;
+  histogram: number[][];
+
+  constructor(uri) {
+    this.update(uri);
   }
 
-  ngOnInit() {
+  update(uri) {
+    // console.log(uri.toString());
+    Jimp.read(uri).then(image => {
+      var resizedImage = image.resize(800, Jimp.AUTO);
+      this.jimpObject = resizedImage;
+      this.setBase64Data(resizedImage);
+      this.histogram = [[],[],[]];
+      this.getHistogram(uri).subscribe(data => {
+        this.histogram = data;
+      });
+    });
+  }
+
+  setBase64Data(image: Jimp) {
+    var self = this;
+    image.getBase64(image.getMIME(), function(err, base64data) {
+      self.uri = base64data;
+    });
+  }
+
+  applyFilterList(filtersList: Array<Filter>) {
+    var jimpFilterArray = [];
+    for (let filter of filtersList) {
+      var name = filter.filter.name;
+      var args = [];
+      for (let arg of filter.filter.args) {
+        args.push(arg.value);
+      }
+      jimpFilterArray.push({apply: name, params: args});
+    }
+    // console.log(jimpFilterArray);
+    var result =  this.jimpObject.clone().color(jimpFilterArray);
+    return result;
+    // return new ImageInstance(this.jimpObject.color(jimpFilterArray));
   }
 
   getHistogram(uri: string) : Observable<number[][]> {
@@ -30,11 +67,15 @@ export class ImageService implements OnInit {
     });
   }
 
-  getImagePixelsFromURI(uri: string) : Observable<Uint8ClampedArray> {
+  getImagePixelsFromURI(uri) : Observable<Uint8ClampedArray> {
     return Observable.create((observer: Observer<Uint8ClampedArray>) => {
      let img = new Image();
      img.crossOrigin = 'Anonymous';
-     img.src = uri;
+     if (typeof uri == "string") { // TODO: fix error here : uri is either string or jimpInstance
+       img.src = uri; // if jimpinstance, uri.uri returns undefined.
+     } else {
+       img.src = uri.uri;
+     }
      if (!img.complete) {
          img.onload = () => {
          observer.next(this.getImagePixels(img));
