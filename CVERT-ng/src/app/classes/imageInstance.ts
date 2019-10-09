@@ -60,7 +60,7 @@ export class ImageInstance {
           rvals[imagePixels[i]]++;
           gvals[imagePixels[i+1]]++;
           bvals[imagePixels[i+2]]++;
-          avals[imagePixels[i+3]]++
+          avals[imagePixels[i+3]]++;
         }
         observer.next([rvals, gvals, bvals, avals]);
       });
