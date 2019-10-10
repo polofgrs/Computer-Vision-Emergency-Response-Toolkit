@@ -1,9 +1,14 @@
 <div class="col full-height full-width">
   <div class="row full-width mx-auto open-save">
     <div class="col-6 my-3 open-button">
-      <button mat-raised-button color="primary" (click)="openImage()">
+      <button mat-raised-button color="primary" (click)="fileInput.click()">
         Open
       </button>
+      <input hidden #fileInput
+            type="file"
+            id="file"
+            accept="image/*"
+            (change)="openImage($event)" >
     </div>
     <div class="col-6 my-3 save-button">
       <button mat-raised-button color="primary" (click)="saveImage()" [disabled]="!bottomImage">
