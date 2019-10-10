@@ -31,13 +31,15 @@
         <app-gps-tab></app-gps-tab>
       </div>
       <div class="row" id="top-histogram">
-        <app-histogram-tab class="full-height full-width" [(histogramData)]="topImage.histogram"></app-histogram-tab>
+        <app-histogram-tab *ngIf="topImage" class="full-height full-width" [(histogramData)]="topImage.histogram"></app-histogram-tab>
       </div>
       <div class="row" id="bottom-histogram">
-        <app-histogram-tab class="full-height full-width" [(histogramData)]="bottomImage.histogram"></app-histogram-tab>
+        <app-histogram-tab *ngIf="bottomImage" class="full-height full-width" [(histogramData)]="bottomImage.histogram"></app-histogram-tab>
       </div>
       <div class="row" id="actions-tab">
-        <app-action-tab></app-action-tab>
+        <app-action-tab class="full-height full-width"
+                        [(topImage)]="topImage"
+                        [(bottomImage)]="bottomImage"></app-action-tab>
       </div>
     </div>
 

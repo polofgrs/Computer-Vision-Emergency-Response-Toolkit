@@ -18,8 +18,8 @@ export class AppComponent implements OnInit {
   currentFilter: Filter;
 
   constructor() {
-    this.topImage = new ImageInstance("assets/cache/test.JPG");
-    this.bottomImage = new ImageInstance("assets/cache/test.JPG");
+    // this.topImage = new ImageInstance("assets/cache/test.JPG");
+    // this.bottomImage = new ImageInstance("assets/cache/test.JPG");
     this.filtersList = new Array<Filter>();
   }
 

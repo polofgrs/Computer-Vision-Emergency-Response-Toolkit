@@ -29,7 +29,9 @@
   </div>
 
   <div class="apply-filters-button mx-auto my-2">
-    <button mat-raised-button color="primary" (click)="applyFilters()">
+    <button mat-raised-button color="primary"
+            [disabled]="!topImage || !filtersList.length"
+            (click)="applyFilters()">
       Apply filters
     </button>
   </div>

@@ -19,10 +19,7 @@ export class ImageInstance {
       var resizedImage = image.resize(800, Jimp.AUTO);
       this.jimpObject = resizedImage;
       this.setBase64Data(resizedImage);
-      this.histogram = [[],[],[]];
-      this.getHistogram(uri).subscribe(data => {
-        this.histogram = data;
-      });
+      // this.histogram = [[],[],[]];
     });
   }
 
@@ -30,6 +27,9 @@ export class ImageInstance {
     var self = this;
     image.getBase64(image.getMIME(), function(err, base64data) {
       self.uri = base64data;
+      self.getHistogram(base64data).subscribe(data => {
+        self.histogram = data;
+      });
     });
   }
 
@@ -49,7 +49,7 @@ export class ImageInstance {
     // return new ImageInstance(this.jimpObject.color(jimpFilterArray));
   }
 
-  getHistogram(uri: string) : Observable<number[][]> {
+  getHistogram(uri) : Observable<number[][]> {
     return Observable.create((observer: Observer<number[][]>) => {
       this.getImagePixelsFromURI(uri).subscribe(imagePixels => {
         var rvals = this.array256(0);
@@ -71,6 +71,7 @@ export class ImageInstance {
     return Observable.create((observer: Observer<Uint8ClampedArray>) => {
      let img = new Image();
      img.crossOrigin = 'Anonymous';
+     // console.log(uri);
      if (typeof uri == "string") { // TODO: fix error here : uri is either string or jimpInstance
        img.src = uri; // if jimpinstance, uri.uri returns undefined.
      } else {

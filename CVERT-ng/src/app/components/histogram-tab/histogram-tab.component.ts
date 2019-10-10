@@ -18,6 +18,13 @@ export class HistogramTabComponent implements OnInit, OnChanges {
 
   constructor() { }
 
+  ngOnInit() {
+    this.labels = new Array(255);
+    for (var i=0; i<this.labels.length; i++) {
+      this.labels[i] = i;
+    }
+  }
+
   ngOnChanges(changes: SimpleChanges) {
     if (changes['histogramData'].currentValue) {
       // console.log(this.histogramData[0]);
@@ -71,13 +78,6 @@ export class HistogramTabComponent implements OnInit, OnChanges {
           }
         }
       });
-    }
-  }
-
-  ngOnInit() {
-    this.labels = new Array(255);
-    for (var i=0; i<this.labels.length; i++) {
-      this.labels[i] = i;
     }
   }
 
