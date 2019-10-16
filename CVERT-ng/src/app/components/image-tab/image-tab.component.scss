@@ -1,3 +1,10 @@
+#container {
+  height: 100%;
+  width: 100%;
+  text-align: center;
+  position: relative;
+}
+
 img {
   max-width: 90%;
   max-height: 90%;
@@ -8,9 +15,9 @@ img {
   transform: translate(-50%, -50%);
 }
 
-#container {
-  height: 100%;
-  width: 100%;
-  text-align: center;
-  position: relative;
+#overlayCanvas {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }

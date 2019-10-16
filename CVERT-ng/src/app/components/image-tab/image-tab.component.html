@@ -1,3 +1,8 @@
-<div *ngIf="image" id="container">
-  <img *ngIf="image.uri" [(src)]="image.uri" id="top-img">
+<div *ngIf="image" id="container" (change)="refreshCanvas()">
+  <img #img *ngIf="image.uri"
+            [(src)]="image.uri"
+            id="img"
+            (window:resize)="refreshCanvas()"
+            (load)="refreshCanvas()">
+  <canvas #overlayCanvas id="overlayCanvas"></canvas>
 </div>
