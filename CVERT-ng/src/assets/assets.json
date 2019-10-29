@@ -169,5 +169,14 @@
         "max": 100
       }
     ]
+  }],
+
+  "fov" : [{
+    "name": "DJI Mavic Pro",
+    "value": 78.8
+  },
+  {
+    "name": "DJI M210",
+    "value": 63.7
   }]
 }

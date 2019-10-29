@@ -2,12 +2,14 @@ import { Observable, Observer } from 'rxjs';
 
 import Jimp from 'jimp';
 import { Filter } from './filter';
+import { GisData } from './gisData';
 
 export class ImageInstance {
 
   jimpObject: any;
   uri: string;
   histogram: number[][];
+  gisData: GisData;
 
   constructor(uri) {
     this.update(uri);
@@ -19,6 +21,7 @@ export class ImageInstance {
       var resizedImage = image.resize(800, Jimp.AUTO);
       this.jimpObject = resizedImage;
       this.setBase64Data(resizedImage);
+      this.gisData = new GisData(image);
       // this.histogram = [[],[],[]];
     });
   }

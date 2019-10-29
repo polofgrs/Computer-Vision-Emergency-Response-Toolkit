@@ -3,6 +3,6 @@
             [(src)]="image.uri"
             id="img"
             (window:resize)="refreshCanvas()"
-            (load)="refreshCanvas()">
+            (load)="onImageLoad()">
   <canvas #overlayCanvas id="overlayCanvas"></canvas>
 </div>

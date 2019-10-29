@@ -18,6 +18,10 @@ export class ImageTabComponent implements OnInit {
   ngOnInit() {
   }
 
+  onImageLoad() {
+    this.refreshCanvas();
+  }
+
   refreshCanvas() {
     this.resizeCanvas();
     // console.log(this.img.nativeElement.width);
