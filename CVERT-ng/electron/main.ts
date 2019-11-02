@@ -2,6 +2,11 @@ import { app, BrowserWindow, dialog, ipcMain } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
 import * as fs from 'fs';
+// import xmpReader from 'xmp-reader';
+import * as exifr from 'exifr';
+var parser = require('fast-xml-parser');
+
+// const { JSDOM } = jsdom;
 
 let win: BrowserWindow;
 
@@ -56,3 +61,42 @@ ipcMain.on('saveFile', (event, base64Data: string, mime: string) => {
   });
   // win.webContents.send('saveFileResponse', "saved !");
 })
+
+//GIS data get
+ipcMain.on('getGISdata', (event, path: string) => {
+  if (fs.lstatSync(path).isFile()) {
+    fs.readFile(path, (err, data) => {
+      exifr.parse(data, {'xmp': true}).then(exif => {
+        var xmpData = getXMPfromExif(exif.xmp);
+        win.webContents.send('getGISdataResponse', xmpData);
+      })
+    })
+  }
+})
+
+//check if path exists
+ipcMain.on('pathExists', (event, path: string) => {
+  win.webContents.send('pathExistsResponse', fs.lstatSync(path).isFile());
+})
+
+function getXMPfromExif(exif: string) {
+  var gisData = {};
+  var dom = parser.parse(exif, {ignoreAttributes: false});
+  var dji_xmp = dom['x:xmpmeta']['rdf:RDF']['rdf:Description'];
+  if (dji_xmp['@_rdf:about'] == "DJI Meta Data") {
+    console.log("found DJI Meta Data");
+    for (const [xmpKey, xmpValue] of Object.entries(dji_xmp)) {
+      if (xmpKey.includes("@_drone-dji:")) {
+        var key = xmpKey;
+        key = key.replace("@_drone-dji:","");
+        var numberValue = Number(xmpValue);
+        if (!isNaN(numberValue)) {
+          gisData[key] = numberValue;
+        } else {
+          gisData[key] = xmpValue;
+        }
+      }
+    }
+  }
+  return gisData;
+}

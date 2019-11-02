@@ -28,8 +28,6 @@ export class ActionTabComponent implements OnInit {
       this.topImageChange.emit(this.topImage);
       this.bottomImage = new ImageInstance(path);
       this.bottomImageChange.emit(this.bottomImage);
-      // console.log(event);
-      // this.fileService.getFiles();
     }
   }
 

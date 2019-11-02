@@ -33,10 +33,6 @@ export class ImageTabComponent implements OnInit {
   resizeCanvas() {
     this.overlayCanvas.nativeElement.height = this.img.nativeElement.height;
     this.overlayCanvas.nativeElement.width = this.img.nativeElement.width;
-    // console.log(this.img.nativeElement);
-    console.log(this.img.nativeElement.width);
-    // console.log(this.overlayCanvas.nativeElement.height);
-    console.log(this.overlayCanvas.nativeElement.width);
   }
 
 }

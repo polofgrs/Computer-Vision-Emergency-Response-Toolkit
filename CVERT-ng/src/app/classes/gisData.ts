@@ -1,7 +1,9 @@
+// import { IpcRenderer } from 'electron'
+
 export class GisData {
 
   altitude: number;
-  altitudeUnit: string; // m or ft
+  altitudeUnit: string; // feet or meters
 
   fov: number; // degrees
   fovPreset: string;
@@ -12,24 +14,37 @@ export class GisData {
   longitude: number;
   heading: number; // degrees
 
-  constructor(jimpObject) {
-    try {
-      console.log(jimpObject._exif);
-      this.altitude = jimpObject._exif.tags.GPSAltitude;
-      this.latitude = jimpObject._exif.tags.GPSLatitude;
-      this.longitude = jimpObject._exif.tags.GPSLongitude;
-    } catch(err) {
-      console.log(err);
-      this.altitude = 0;
-      this.latitude = 0;
-      this.longitude = 0;
-    }
-    this.altitudeUnit = "ft"
+  constructor(path: string) {
+    this.getGISdataFromPath(path);
+    this.altitudeUnit = "meters"
     this.positionUnit = "gps";
     this.fovPreset = "custom";
-    this.fov = 0;
-    this.pitch = 0;
-    console.log(this);
+    this.fov = 70;
+  }
+
+  getGISdataFromPath(path: string) {
+    const ipc = (<any>window).require('electron').ipcRenderer;
+    ipc.once("getGISdataResponse", (event, gisData) => {
+      if (gisData != {}) {
+        // console.log(gisData);
+        this.altitude = gisData.RelativeAltitude;
+        this.latitude = gisData.GpsLatitude;
+        this.heading = gisData.GimbalYawDegree;
+        this.pitch = gisData.GimbalPitchDegree;
+        if (typeof gisData.GpsLongitude !== 'undefined') { // DJI has a typo in XMP data
+          this.longitude = gisData.GpsLongitude;
+        } else {
+          this.longitude = gisData.GpsLongtitude;
+        }
+      } else {
+        this.altitude = 0;
+        this.latitude = 0;
+        this.longitude = 0;
+        this.heading = 0;
+        this.pitch = -90;
+      }
+    });
+    ipc.send("getGISdata", path);
   }
 
 }

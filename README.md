@@ -77,13 +77,20 @@ That will enable me to reuse all of the [original CVERT Python algorithms](https
 
 ### Used libraries and packages
 __Front-end:__   
-[Node](https://nodejs.org/en/) & [npm](https://www.npmjs.com/), with the following libraries:
+[Node](https://nodejs.org/en/) & [npm](https://www.npmjs.com/), with the following dev libraries:
 * [Angular](https://angular.io),
-* [Angular Material](https://material.angular.io/),
 * [Electron](https://electronjs.org/),
 * [Electron-builder](https://www.electron.build/),
+
+And the following prod libraries:
+* [Angular Material](https://material.angular.io/),
+* [Bootstrap](https://getbootstrap.com/),
 * [Jimp](https://www.npmjs.com/package/jimp),
+* [Exifr](https://www.npmjs.com/package/exifr),
+* [Fast-xml-parser](https://www.npmjs.com/package/fast-xml-parser),
 * [Chart.js](https://www.chartjs.org/),
+
+*You can find all of the npm libraries in [package.json](CVERT-ng/package.json).*
 
 __Back-end:__   
 [Python 3.6](https://www.python.org/) running a web server to handle image processing requests.   
@@ -104,7 +111,7 @@ npm i
 npm run electron
 ```
 __Back-end:__   
-Install [Python 3.6](https://www.python.org/), then the packages in `/python-server/packages.py` *(not yet implemented)*, then run the server with :
+Install [Python 3.6](https://www.python.org/), then the packages in [packages.py](python-server/packages.py) *(not yet implemented)*, then run the server with :
 ```bash
 cd python-server
 python3 server.py

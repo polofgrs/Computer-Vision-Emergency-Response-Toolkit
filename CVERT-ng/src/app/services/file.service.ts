@@ -24,11 +24,6 @@ export class FileService {
 
   async saveImage(image: ImageInstance) {
     return new Promise<string[]>((resolve, reject) => {
-      /*this.ipc.once("saveFileResponse", (event, arg) => {
-        console.log(arg);
-        resolve(arg);
-      });*/
-      console.log(image);
       this.ipc.send("saveFile", image.uri, image.jimpObject._originalMime);
     });
   }

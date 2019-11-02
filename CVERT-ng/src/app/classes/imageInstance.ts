@@ -4,6 +4,8 @@ import Jimp from 'jimp';
 import { Filter } from './filter';
 import { GisData } from './gisData';
 
+import * as path from 'path';
+
 export class ImageInstance {
 
   jimpObject: any;
@@ -21,8 +23,15 @@ export class ImageInstance {
       var resizedImage = image.resize(800, Jimp.AUTO);
       this.jimpObject = resizedImage;
       this.setBase64Data(resizedImage);
-      this.gisData = new GisData(image);
-      // this.histogram = [[],[],[]];
+      if (typeof uri == 'string') {
+        const ipc = (<any>window).require('electron').ipcRenderer;
+        ipc.once("pathExistsResponse", (event, pathExists) => {
+          if (pathExists) {
+            this.gisData = new GisData(uri);
+          }
+        });
+        ipc.send("pathExists", uri);
+      }
     });
   }
 
@@ -74,19 +83,18 @@ export class ImageInstance {
     return Observable.create((observer: Observer<Uint8ClampedArray>) => {
      let img = new Image();
      img.crossOrigin = 'Anonymous';
-     // console.log(uri);
-     if (typeof uri == "string") { // TODO: fix error here : uri is either string or jimpInstance
-       img.src = uri; // if jimpinstance, uri.uri returns undefined.
+     if (typeof uri == "string") {
+       img.src = uri;
      } else {
        img.src = uri.uri;
      }
      if (!img.complete) {
-         img.onload = () => {
+       img.onload = () => {
          observer.next(this.getImagePixels(img));
          observer.complete();
        };
        img.onerror = (err) => {
-          observer.error(err);
+         observer.error(err);
        };
      } else {
          observer.next(this.getImagePixels(img));
@@ -96,12 +104,12 @@ export class ImageInstance {
   }
 
   getImagePixels(img: HTMLImageElement): Uint8ClampedArray {
-   var canvas = document.createElement("canvas");
-   canvas.width = img.width;
-   canvas.height = img.height;
-   var ctx = canvas.getContext("2d");
-   ctx.drawImage(img, 0, 0);
-   return ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+    var canvas = document.createElement("canvas");
+    canvas.width = img.width;
+    canvas.height = img.height;
+    var ctx = canvas.getContext("2d");
+    ctx.drawImage(img, 0, 0);
+    return ctx.getImageData(0, 0, canvas.width, canvas.height).data;
   }
 
   array256(default_value: number) : number[] {

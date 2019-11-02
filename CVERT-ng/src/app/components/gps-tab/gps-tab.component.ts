@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 import { ImageInstance } from '../../classes/imageInstance';
 
@@ -16,12 +16,5 @@ export class GpsTabComponent implements OnInit {
 
   ngOnInit() {
   }
-
-  /*ngOnChanges(changes: SimpleChanges) {
-    if (changes['image'].currentValue) {
-      // console.log(this.image);
-      this.gisService.update(this.image);
-    }
-  }*/
 
 }
