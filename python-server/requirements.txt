@@ -9,3 +9,6 @@ scikit-learn
 spectral
 argparse
 matplotlib
+
+flask
+flask_cors

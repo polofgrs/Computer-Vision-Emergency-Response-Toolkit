@@ -67,13 +67,13 @@ ipcMain.on('openAlgorithmParametersWindow', (event) => {
 
 //save algorithm parameters to assets.json
 ipcMain.on('saveAlgorithmParameters', (event, algorithmParameters) => {
-  console.log(algorithmParameters);
+  // console.log(algorithmParameters);
   var assetsPath = url.format({
     pathname: path.join(__dirname, `/../../dist/CVERT-ng/assets/assets.json`),
     slashes: true,
   })
   var assets = JSON.parse(fs.readFileSync(assetsPath).toString());
-  console.log(assets);
+  // console.log(assets);
   assets.algorithmParameters = algorithmParameters;
   fs.writeFile(assetsPath, JSON.stringify(assets), (err) => {
     if (err) {
