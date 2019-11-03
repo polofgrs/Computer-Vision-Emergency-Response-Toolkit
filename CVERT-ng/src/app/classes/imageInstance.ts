@@ -65,6 +65,10 @@ export class ImageInstance {
           }
           console.log('need to apply server filter');
           console.log(filter.filter.name);
+          server.send(filter.filter, 'sourcePath', 'response').then((data) => {
+            console.log('server response');
+            console.log(data);
+          });
           // TODO : wait for image from server
           // can be async
           // in case of error, reject(err)

@@ -24,24 +24,27 @@ export class ServerService {
     });
   }
 
-  send(algorithm: string,
+  send(algorithm: any,
         sourcePath: string,
-        targetPath: string) {
-    this.http.get('assets/assets.json').subscribe(jsonParam => {
-      // console.log(jsonParam);
-      let jsonData = this.getJsonFromParam(algorithm, sourcePath, targetPath, jsonParam['algorithmParameters']);
-      let httpHeaders = new HttpHeaders({
-        'Content-Type' : 'application/json'
-  	  });
-      let url = 'http://' + this.ip + ':' + this.port;
-      this.http.post<any>(url, jsonData, {headers: httpHeaders})
-      .subscribe((data) => {
-        // console.log(data);
-      })
-    });
+        targetPath: string) : Promise<any> {
+    var that = this;
+    return new Promise(function(resolve, reject) {
+      that.http.get('assets/assets.json').subscribe(jsonParam => {
+        // console.log(jsonParam);
+        let jsonData = that.getJsonFromParam(algorithm, sourcePath, targetPath, jsonParam['algorithmParameters']);
+        let httpHeaders = new HttpHeaders({
+          'Content-Type' : 'application/json'
+    	  });
+        let url = 'http://' + that.ip + ':' + that.port;
+        that.http.post<any>(url, jsonData, {headers: httpHeaders})
+        .subscribe((data) => {
+          resolve(data);
+        })
+      });
+    })
   }
 
-  getJsonFromParam(algorithm: string,
+  getJsonFromParam(algorithm: any,
                     sourcePath: string,
                     targetPath: string,
                     jsonData: any) {
