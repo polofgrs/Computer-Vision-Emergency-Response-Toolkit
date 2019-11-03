@@ -4,6 +4,8 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Filter } from '../../classes/filter';
 import { ImageInstance } from '../../classes/imageInstance';
 
+import { ServerService } from '../../services/server.service';
+
 import Jimp from 'jimp';
 import * as assets from '../../../assets/assets.json';
 
@@ -28,7 +30,7 @@ export class FiltersTabComponent implements OnInit {
 
   sourceImage: Jimp;
 
-  constructor() { }
+  constructor(private server: ServerService) { }
 
   ngOnInit() {
     // console.log(assets.filters);
@@ -66,10 +68,11 @@ export class FiltersTabComponent implements OnInit {
   }
 
   applyFilters() {
-    var update = this.topImage.applyFilterList(this.filtersList)
-    this.bottomImage.update(update);
-    this.bottomImageChange.emit(this.bottomImage);
-    // console.log(this.bottomImage);
+    this.topImage.applyFilterList(this.filtersList, this.server).then(result => {
+      this.bottomImage.update(result);
+      this.bottomImageChange.emit(this.bottomImage);
+      // console.log(this.bottomImage);
+    });
   }
 
 }

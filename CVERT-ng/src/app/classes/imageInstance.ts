@@ -1,10 +1,10 @@
 import { Observable, Observer } from 'rxjs';
+import * as assets from '../../assets/assets.json';
+import { ServerService } from '../services/server.service';
 
 import Jimp from 'jimp';
 import { Filter } from './filter';
 import { GisData } from './gisData';
-
-import * as path from 'path';
 
 export class ImageInstance {
 
@@ -45,20 +45,44 @@ export class ImageInstance {
     });
   }
 
-  applyFilterList(filtersList: Array<Filter>) {
-    var jimpFilterArray = [];
-    for (let filter of filtersList) {
-      var name = filter.filter.name;
-      var args = [];
-      for (let arg of filter.filter.args) {
-        args.push(arg.value);
+  applyFilterList(filtersList: Array<Filter>, server: ServerService) : Promise<any> {
+    var that = this;
+    return new Promise(function(resolve, reject) {
+      var result = that.jimpObject.clone();
+      var jimpFilterArray = [];
+      for (let filter of filtersList) {
+        if (that.isJimp(filter)) {
+          var name = filter.filter.name;
+          var args = [];
+          for (let arg of filter.filter.args) {
+            args.push(arg.value);
+          }
+          jimpFilterArray.push({apply: name, params: args});
+        } else {
+          if (jimpFilterArray.length > 0) {
+            var result = result.color(jimpFilterArray);
+            jimpFilterArray = [];
+          }
+          console.log('need to apply server filter');
+          console.log(filter.filter.name);
+          // TODO : wait for image from server
+          // can be async
+          // in case of error, reject(err)
+        }
       }
-      jimpFilterArray.push({apply: name, params: args});
-    }
-    // console.log(jimpFilterArray);
-    var result =  this.jimpObject.clone().color(jimpFilterArray);
-    return result;
-    // return new ImageInstance(this.jimpObject.color(jimpFilterArray));
+      if (jimpFilterArray.length > 0) {
+        var result = result.color(jimpFilterArray);
+        jimpFilterArray = [];
+      }
+      resolve(result);
+    });
+  }
+
+  isJimp(filter: Filter) {
+    var found = assets.filters.find(function(element) {
+      return(filter.filter.name == element.name);
+    });
+    return(typeof found !== 'undefined');
   }
 
   getHistogram(uri) : Observable<number[][]> {
