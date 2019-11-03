@@ -42,17 +42,17 @@ function createWindow() {
 
 //parameters window
 ipcMain.on('openAlgorithmParametersWindow', (event) => {
-  /*const remote = require('electron').remote;
-  console.log(remote);
-  const BrowserWindow = remote.BrowserWindow;*/
 
   const win = new BrowserWindow({
-    width: 800,
+    width: 900,
     height: 600,
-    /*center: true,
+    center: true,
     resizable: true,
     frame: true,
-    transparent: false*/
+    transparent: false,
+    webPreferences: {
+      nodeIntegration: true // for nodeJS integration
+    }
   });
 
   var urlToNav = url.format({
@@ -63,6 +63,25 @@ ipcMain.on('openAlgorithmParametersWindow', (event) => {
   urlToNav = urlToNav + '#/parameters';
   console.log(urlToNav);
   win.loadURL(urlToNav);
+})
+
+//save algorithm parameters to assets.json
+ipcMain.on('saveAlgorithmParameters', (event, algorithmParameters) => {
+  console.log(algorithmParameters);
+  var assetsPath = url.format({
+    pathname: path.join(__dirname, `/../../dist/CVERT-ng/assets/assets.json`),
+    slashes: true,
+  })
+  var assets = JSON.parse(fs.readFileSync(assetsPath).toString());
+  console.log(assets);
+  assets.algorithmParameters = algorithmParameters;
+  fs.writeFile(assetsPath, JSON.stringify(assets), (err) => {
+    if (err) {
+      console.error(err);
+    } else {
+      console.log('Saved Algorithm Parameters');
+    }
+  });
 })
 
 //file get
@@ -102,6 +121,7 @@ ipcMain.on('pathExists', (event, path: string) => {
   win.webContents.send('pathExistsResponse', fs.lstatSync(path).isFile());
 })
 
+// XMP getter from file Exif
 function getXMPfromExif(exif: string) {
   var gisData = {};
   var dom = parser.parse(exif, {ignoreAttributes: false});

@@ -32,4 +32,8 @@ export class FileService {
     this.ipc.send('openAlgorithmParametersWindow');
   }
 
+  saveAlgorithmParameters(algorithmParameters: any) {
+    this.ipc.send('saveAlgorithmParameters', algorithmParameters);
+  }
+
 }

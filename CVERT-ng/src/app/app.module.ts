@@ -15,6 +15,7 @@ import { HistogramTabComponent } from './components/histogram-tab/histogram-tab.
 import { ActionTabComponent } from './components/action-tab/action-tab.component';
 import { AlgorithmParametersEditComponent } from './components/algorithm-parameters-edit/algorithm-parameters-edit.component';
 import { HomeComponent } from './components/home/home.component';
+import { AlgorithmParameterItemComponent } from './components/algorithm-parameters-edit/algorithm-parameter-item/algorithm-parameter-item.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { HomeComponent } from './components/home/home.component';
     HistogramTabComponent,
     ActionTabComponent,
     AlgorithmParametersEditComponent,
-    HomeComponent
+    HomeComponent,
+    AlgorithmParameterItemComponent
   ],
   imports: [
     BrowserModule,
