@@ -38,6 +38,7 @@ export class ServerService {
         let url = 'http://' + that.ip + ':' + that.port;
         that.http.post<any>(url, jsonData, {headers: httpHeaders})
         .subscribe((data) => {
+          console.log('received data');
           resolve(data);
         })
       });

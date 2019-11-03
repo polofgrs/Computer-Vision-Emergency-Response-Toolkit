@@ -1,6 +1,7 @@
 import numpy as np
 import cv2
 from scipy.signal import convolve2d
+import os
 
 import timer
 
@@ -23,7 +24,7 @@ def conv(name, input, weights, bias):
 		feat_maps = []
 		for j in range(weights.shape[1]):
 			feat_maps.append(convolve2d(np.pad(input[0, j, :, :], conv_padding[name], 'constant'), weights[i, j, :, :], mode='valid'))
-		
+
 		filter_feat_maps.append(np.sum(feat_maps, axis=0) + bias[i])
 
 	filter_feat_maps = np.dstack(filter_feat_maps)
@@ -40,7 +41,7 @@ def relu(input):
 
 def aod_net(x, np_weights):
 	"""
-	Gives dehazed image output for input 'x' of size (1 x num_channels x height x width) 
+	Gives dehazed image output for input 'x' of size (1 x num_channels x height x width)
 	using given model weights for AOD-Net (All-in-One Dehazing Network, Boyi Li et. al., 2017)
 	"""
 
@@ -63,11 +64,11 @@ def aod_net(x, np_weights):
 	return relu(output)
 
 
-def Dehaze(img_path, Params = None, model_path = 'lib/Algorithms/pretrained_aod_net_numpy.npy'):
+def Dehaze(img_path, Params = None, model_path = os.path.dirname(os.path.realpath(__file__)) + '/pretrained_aod_net_numpy.npy'):
 	"""
 	Primary function for interfacing with the dehazing network. Provide an image path and will return a numpy image.
 
-	Loading image: For the input image, cv2.imread always loads a 3-channel image which is the requirement of the AOD-Net. 
+	Loading image: For the input image, cv2.imread always loads a 3-channel image which is the requirement of the AOD-Net.
 	So load any grayscale image as a 3-channel image.
 	"""
 
@@ -92,13 +93,13 @@ def Dehaze(img_path, Params = None, model_path = 'lib/Algorithms/pretrained_aod_
 	x = np.expand_dims(img, axis=0).transpose(0,3,1,2)
 
 	# Loading model weights
-	np_weights = np.load(model_path).item()
+	np_weights = np.load(model_path, allow_pickle=True).item()
 
 	output = aod_net(x, np_weights)
 	output = np.squeeze(output)
 	output = (output*255).astype(np.uint8) # RGB numpy image array
 	output = output.transpose(1,2,0)
-	
+
 	#Convert back to BGR
 	output = cv2.cvtColor(output, cv2.COLOR_RGB2BGR)	#OpenCV's RGB to BGR
 
@@ -109,16 +110,16 @@ def Dehaze(img_path, Params = None, model_path = 'lib/Algorithms/pretrained_aod_
 
 
 
-def dehaze_and_display(img_path, model_path = 'lib/Algorithms/pretrained_aod_net_numpy.npy'):
+def dehaze_and_display(img_path, model_path = os.path.dirname(os.path.realpath(__file__)) + '/pretrained_aod_net_numpy.npy'):
 	"""
-	Dehazes and then displays the dehazed image. 
+	Dehazes and then displays the dehazed image.
 	"""
-	
+
 	dehazed_image = Dehaze(img_path, model_path= model_path)
 	from PIL import Image
 	PIL_img = Image.fromarray(dehazed_image)
 	PIL_img.show()
-	
+
 
 # --------------------------- Debugging and Testing ------------------------------
 # if __name__ == '__main__':

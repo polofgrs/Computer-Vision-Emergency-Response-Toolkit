@@ -14,10 +14,6 @@ export class ServerTabComponent implements OnInit {
   ngOnInit() {
   }
 
-  sendParameters() {
-    this.server.send('testAlgo', 'sourcePath', 'targetPath');
-  }
-
   reset() {
     this.server.reset();
   }

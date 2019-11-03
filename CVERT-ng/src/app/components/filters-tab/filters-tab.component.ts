@@ -34,12 +34,12 @@ export class FiltersTabComponent implements OnInit {
 
   ngOnInit() {
     // console.log(assets.filters);
-    console.log(assets.filters);
+    // console.log(assets.filters);
   }
 
   drop(event: CdkDragDrop<string[]>) {
     moveItemInArray(this.filtersList, event.previousIndex, event.currentIndex);
-    console.log(this.filtersList);
+    // console.log(this.filtersList);
     this.filterListChange.emit(this.filtersList);
   }
 

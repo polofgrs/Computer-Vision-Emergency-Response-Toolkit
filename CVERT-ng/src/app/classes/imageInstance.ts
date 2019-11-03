@@ -47,7 +47,7 @@ export class ImageInstance {
 
   applyFilterList(filtersList: Array<Filter>, server: ServerService) : Promise<any> {
     var that = this;
-    return new Promise(function(resolve, reject) {
+    return new Promise(async function(resolve, reject) {
       var result = that.jimpObject.clone();
       var jimpFilterArray = [];
       for (let filter of filtersList) {
@@ -60,18 +60,18 @@ export class ImageInstance {
           jimpFilterArray.push({apply: name, params: args});
         } else {
           if (jimpFilterArray.length > 0) {
+            console.log('color');
             var result = result.color(jimpFilterArray);
             jimpFilterArray = [];
           }
-          console.log('need to apply server filter');
-          console.log(filter.filter.name);
-          server.send(filter.filter, 'sourcePath', 'response').then((data) => {
-            console.log('server response');
-            console.log(data);
-          });
-          // TODO : wait for image from server
-          // can be async
-          // in case of error, reject(err)
+          var data = await server.send(filter.filter, that.uri, 'response');
+          result = await new Promise((resolve, reject) => {
+            var buffer = Buffer.from(data.image, 'base64');
+            Jimp.read(buffer)
+            .then(image => {
+              resolve(image);
+            });
+          })
         }
       }
       if (jimpFilterArray.length > 0) {

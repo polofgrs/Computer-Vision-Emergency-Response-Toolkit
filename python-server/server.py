@@ -5,6 +5,8 @@
 from flask import Flask, request, Response
 from flask_cors import CORS
 
+import handlePost
+
 app = Flask(__name__)
 app.config['JSON_SORT_KEYS'] = False
 CORS(app)
@@ -16,11 +18,8 @@ def get():
         sourcePath = request.json.get('sourcePath')
         targetPath = request.json.get('targetPath')
         parameters = request.json.get('parameters')
-        print(algorithm)
-        print(sourcePath)
-        print(targetPath)
-        print(parameters)
-        response = Response(status=200)
+        response = handlePost.handlePost(algorithm, sourcePath, targetPath, parameters)
+        # response = Response(status=200)
     elif request.method == 'GET':
         response = Response(status=200)
     return(response)
