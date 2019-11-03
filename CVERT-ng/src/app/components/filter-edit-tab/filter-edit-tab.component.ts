@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 import { Filter } from '../../classes/filter';
 import * as assets from '../../../assets/assets.json';
-// import filters from '../../../assets/filters.json';
+import { FileService } from '../../services/file.service';
 
 @Component({
   selector: 'app-filter-edit-tab',
@@ -15,10 +15,15 @@ export class FilterEditTabComponent implements OnInit {
   @Output() currentFilterChange = new EventEmitter();
 
   filters: any;
+  serverFilters: any;
+  allFilters: any;
 
-  constructor() {
+  constructor(private fileService: FileService) {
     this.filters = assets.filters;
-    // console.log(this.filters);
+    this.serverFilters = assets.serverFilters;
+    this.allFilters = this.filters.concat(this.serverFilters);
+    console.log(this.filters);
+    console.log(this.serverFilters);
   }
 
   ngOnInit() {
@@ -26,13 +31,17 @@ export class FilterEditTabComponent implements OnInit {
 
   changeFilter() {
     this.currentFilter.filter = JSON.parse(JSON.stringify(
-      this.filters.find(
+      this.allFilters.find(
         filterItem => {
           return filterItem.name == this.currentFilter.filter.name;
         }
       )
     ));
     this.currentFilterChange.emit(this.currentFilter);
+  }
+
+  openParameters() {
+    this.fileService.openParameters();
   }
 
 }

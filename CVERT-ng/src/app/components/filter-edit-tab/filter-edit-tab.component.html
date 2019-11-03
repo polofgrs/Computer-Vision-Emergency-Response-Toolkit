@@ -10,9 +10,16 @@
       <mat-select [(ngModel)]="currentFilter.filter.name"
                   name="type"
                   (selectionChange)="changeFilter()">
-        <mat-option *ngFor="let filter of filters" [value]="filter.name">
-          {{filter.name}}
-        </mat-option>
+        <mat-optgroup label="Basic filters">
+          <mat-option *ngFor="let filter of filters" [value]="filter.name">
+            {{filter.name}}
+          </mat-option>
+        </mat-optgroup>
+        <mat-optgroup label="Advanced filters">
+          <mat-option *ngFor="let filter of serverFilters" [value]="filter.name">
+            {{filter.name}}
+          </mat-option>
+        </mat-optgroup>
       </mat-select>
     </mat-form-field>
 
@@ -32,6 +39,13 @@
                name="color"
                [(ngModel)]="arg.value">
       </mat-form-field>
+
+      <button mat-raised-button color="primary"
+              *ngIf="arg.type == 'button'"
+              class="full-width"
+              (click)="openParameters()">
+        Edit Server Parameters
+      </button>
     </div>
 
   </form>

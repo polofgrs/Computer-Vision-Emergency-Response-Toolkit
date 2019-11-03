@@ -6,7 +6,6 @@ import { ImageInstance } from '../../classes/imageInstance';
 
 import Jimp from 'jimp';
 import * as assets from '../../../assets/assets.json';
-// import * as assets from '../../../assets/filters.json';
 
 @Component({
   selector: 'app-filters-tab',

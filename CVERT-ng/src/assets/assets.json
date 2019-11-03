@@ -171,6 +171,25 @@
     ]
   }],
 
+  "serverFilters" : [{
+    "name": "RXDetector",
+    "libName": "RXDetector",
+    "pyFunction": "RXD",
+    "args": [{"type": "button"}]
+  },
+  {
+    "name": "DebrisDetect",
+    "libName": "DXDetector",
+    "pyFunction": "DebrisDetect",
+    "args": [{"type": "button"}]
+  },
+  {
+    "name": "Dehaze",
+    "libName": "AODNet",
+    "pyFunction": "Dehaze",
+    "args": [{"type": "button"}]
+  }],
+
   "fovPresets" : [{
     "name": "DJI Mavic Pro",
     "value": 78.8
