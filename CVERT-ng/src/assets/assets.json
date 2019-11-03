@@ -171,12 +171,97 @@
     ]
   }],
 
-  "fov" : [{
+  "fovPresets" : [{
     "name": "DJI Mavic Pro",
     "value": 78.8
   },
   {
     "name": "DJI M210",
     "value": 63.7
+  }],
+
+  "algorithmParameters" : [{
+    "name": "RxThreshold",
+    "userDefault": true,
+    "defaultValue": 90,
+    "userValue": 90
+  },
+  {
+    "name": "RxChiThreshold",
+    "userDefault": true,
+    "defaultValue": 0.999,
+    "userValue": 0.999
+  },
+  {
+    "name": "LineGaussianIter",
+    "userDefault": true,
+    "defaultValue": 0,
+    "userValue": 0
+  },
+  {
+    "name": "LineDilationIter",
+    "userDefault": true,
+    "defaultValue": 1,
+    "userValue": 1
+  },
+  {
+    "name": "LineBilatBlurColor",
+    "userDefault": true,
+    "defaultValue": 75,
+    "userValue": 75
+  },
+  {
+    "name": "LineBilatBlurSpace",
+    "userDefault": true,
+    "defaultValue": 75,
+    "userValue": 75
+  },
+  {
+    "name": "LineCannyEdgeLowerBound",
+    "userDefault": true,
+    "defaultValue": 100,
+    "userValue": 100
+  },
+  {
+    "name": "LineCannyEdgeThreshold",
+    "userDefault": true,
+    "defaultValue": 140,
+    "userValue": 140
+  },
+  {
+    "name": "CornerGaussianIter",
+    "userDefault": true,
+    "defaultValue": 0,
+    "userValue": 0
+  },
+  {
+    "name": "CornerErosionIter",
+    "userDefault": true,
+    "defaultValue": 1,
+    "userValue": 1
+  },
+  {
+    "name": "CornerBilateralColor",
+    "userDefault": true,
+    "defaultValue": 200,
+    "userValue": 200
+  },
+  {
+    "name": "CornerBilateralSpace",
+    "userDefault": true,
+    "defaultValue": 500,
+    "userValue": 500
+  },
+  {
+    "name": "CornerMaxDistance",
+    "userDefault": true,
+    "defaultValue": 75,
+    "userValue": 75
+  },
+  {
+    "name": "CornerNumPoints",
+    "userDefault": true,
+    "defaultValue": 3,
+    "userValue": 3
   }]
 }

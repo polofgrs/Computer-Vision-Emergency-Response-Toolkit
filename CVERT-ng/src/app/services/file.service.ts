@@ -28,4 +28,8 @@ export class FileService {
     });
   }
 
+  openParameters() {
+    this.ipc.send('openAlgorithmParametersWindow');
+  }
+
 }

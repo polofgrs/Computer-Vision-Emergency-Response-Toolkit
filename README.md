@@ -43,7 +43,7 @@ I decided to use the following architecture for my software :
             +-------------------------+
             |        Category 3       |
             |                         |
-            |      UDP Connexion      |
+            |     HTTP Connexion      |
             +-------+--------+--------+
                     |        ^
                     |        |
@@ -56,7 +56,7 @@ Processing request: |        | Algorithm results:
              +------+--------+-------+
              |   BACK-END (optional) |
              |     Python server     |
-             |     UDP connexion     |
+             |     HTTP connexion    |
              +-----------------------+
              |Algorithm 1|Algorithm 2|
              +-----------------------+
@@ -94,10 +94,13 @@ And the following prod libraries:
 
 __Back-end:__   
 [Python 3.6](https://www.python.org/) running a web server to handle image processing requests.   
-It uses the following libraries:
-* [Socket](https://docs.python.org/3/library/socket.html),
+It uses the following dev libraries:
 * [PyInstaller](https://www.pyinstaller.org/),
-* All the [necessary libraries](https://github.com/cvertdev/Computer-Vision-Emergency-Response-Toolkit) for the image processing algorithms.
+* [pip3](https://pip.pypa.io/en/stable/);
+
+And the foollowing prod libraries:
+* [Flask](https://palletsprojects.com/p/flask/),
+* All the [necessary libraries](python-server/requirements.txt) for the image processing algorithms.
 
 ## For developers :
 __NOTE:__ *I am a Linux user. You might need to look around for equivalent Windows or Mac commands and installation processes...*
@@ -111,8 +114,10 @@ npm i
 npm run electron
 ```
 __Back-end:__   
-Install [Python 3.6](https://www.python.org/), then the packages in [packages.py](python-server/packages.py) *(not yet implemented)*, then run the server with :
+Install [Python 3.6](https://www.python.org/), then the packages in [requirements.txt](python-server/requirements.txt), then run the server:
 ```bash
+sudo apt-get install pyhton3-pip
 cd python-server
+pip3 install -r requirements.txt
 python3 server.py
 ```

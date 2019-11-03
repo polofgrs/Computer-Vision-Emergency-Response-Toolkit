@@ -2,6 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 import { Filter } from '../../classes/filter';
 import * as assets from '../../../assets/assets.json';
+// import filters from '../../../assets/filters.json';
 
 @Component({
   selector: 'app-filter-edit-tab',

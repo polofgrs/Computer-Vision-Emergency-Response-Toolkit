@@ -1,12 +1,10 @@
-import { app, BrowserWindow, dialog, ipcMain } from 'electron';
+import { app, BrowserWindow, dialog, ipcMain} from 'electron';
 import * as path from 'path';
 import * as url from 'url';
 import * as fs from 'fs';
-// import xmpReader from 'xmp-reader';
+
 import * as exifr from 'exifr';
 var parser = require('fast-xml-parser');
-
-// const { JSDOM } = jsdom;
 
 let win: BrowserWindow;
 
@@ -41,6 +39,31 @@ function createWindow() {
 }
 
 // IPC functions
+
+//parameters window
+ipcMain.on('openAlgorithmParametersWindow', (event) => {
+  /*const remote = require('electron').remote;
+  console.log(remote);
+  const BrowserWindow = remote.BrowserWindow;*/
+
+  const win = new BrowserWindow({
+    width: 800,
+    height: 600,
+    /*center: true,
+    resizable: true,
+    frame: true,
+    transparent: false*/
+  });
+
+  var urlToNav = url.format({
+        pathname: path.join(__dirname, `/../../dist/CVERT-ng/index.html`),
+        protocol: 'file:',
+        slashes: true,
+      })
+  urlToNav = urlToNav + '#/parameters';
+  console.log(urlToNav);
+  win.loadURL(urlToNav);
+})
 
 //file get
 ipcMain.on('saveFile', (event, base64Data: string, mime: string) => {

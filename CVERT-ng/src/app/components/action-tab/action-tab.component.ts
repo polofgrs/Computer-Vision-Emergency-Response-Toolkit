@@ -36,4 +36,8 @@ export class ActionTabComponent implements OnInit {
     // console.log("save image");
   }
 
+  openParameters() {
+    this.fileService.openParameters();
+  }
+
 }

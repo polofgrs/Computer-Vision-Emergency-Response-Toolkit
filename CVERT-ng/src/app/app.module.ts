@@ -13,6 +13,8 @@ import { ServerTabComponent } from './components/server-tab/server-tab.component
 import { GpsTabComponent } from './components/gps-tab/gps-tab.component';
 import { HistogramTabComponent } from './components/histogram-tab/histogram-tab.component';
 import { ActionTabComponent } from './components/action-tab/action-tab.component';
+import { AlgorithmParametersEditComponent } from './components/algorithm-parameters-edit/algorithm-parameters-edit.component';
+import { HomeComponent } from './components/home/home.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +25,9 @@ import { ActionTabComponent } from './components/action-tab/action-tab.component
     ServerTabComponent,
     GpsTabComponent,
     HistogramTabComponent,
-    ActionTabComponent
+    ActionTabComponent,
+    AlgorithmParametersEditComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,
