@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 import base64
+import sys
 
 from Algorithms.RXDetector import RXD
 from Algorithms.DXDetector import DebrisDetect
@@ -9,10 +10,8 @@ from Algorithms.AODNet import Dehaze
 def handlePost(algorithm, sourcePath, targetPath, parameters):
     if targetPath == 'response':
         image = data_uri_to_cv2_img(sourcePath)
-        # TODO : handle the right algorithm
-        resultImage = Dehaze(image[1], parameters)
+        resultImage = getattr(sys.modules[__name__], algorithm['pyFunction'])(image[1], parameters)
         uri = cv2_img_to_data_uri(image[0], resultImage[0])
-        # print(uri)
         resultDict = {
             'image': uri,
             'time': resultImage[1],

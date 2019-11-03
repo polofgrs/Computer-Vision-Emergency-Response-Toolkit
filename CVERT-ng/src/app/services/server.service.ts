@@ -30,7 +30,6 @@ export class ServerService {
     var that = this;
     return new Promise(function(resolve, reject) {
       that.http.get('assets/assets.json').subscribe(jsonParam => {
-        // console.log(jsonParam);
         let jsonData = that.getJsonFromParam(algorithm, sourcePath, targetPath, jsonParam['algorithmParameters']);
         let httpHeaders = new HttpHeaders({
           'Content-Type' : 'application/json'
@@ -38,7 +37,7 @@ export class ServerService {
         let url = 'http://' + that.ip + ':' + that.port;
         that.http.post<any>(url, jsonData, {headers: httpHeaders})
         .subscribe((data) => {
-          console.log('received data');
+          console.log(data);
           resolve(data);
         })
       });

@@ -19,8 +19,8 @@ app.on('activate', () => {
 // mains process
 function createWindow() {
   win = new BrowserWindow({
-    width: 1680,
-    height: 760,
+    /*width: 1680,
+    height: 760,*/
     webPreferences: {
       nodeIntegration: true // for nodeJS integration
     }
@@ -32,6 +32,7 @@ function createWindow() {
       slashes: true,
     })
   );
+  win.maximize();
   // win.webContents.openDevTools();
   win.on('closed', () => {
     win = null;
