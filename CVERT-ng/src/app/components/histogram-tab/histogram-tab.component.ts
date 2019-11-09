@@ -11,7 +11,7 @@ import { BehaviorSubject } from 'rxjs';
 export class HistogramTabComponent implements OnInit, OnChanges {
 
   @Input() histogramData: number[][];
-  @ViewChild("histogramCanvas", {static: false}) histogramCanvas: ElementRef;
+  @ViewChild("histogramCanvas", {static: true}) histogramCanvas: ElementRef;
 
   chart: Chart;
   labels: Array<number>;

@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
 
 import { ImageInstance } from '../../classes/imageInstance';
+import { CanvasService } from '../../services/canvas.service';
 
 @Component({
   selector: 'app-image-tab',
@@ -13,26 +14,30 @@ export class ImageTabComponent implements OnInit {
   @ViewChild("img", {static: false}) img: ElementRef;
   @ViewChild("overlayCanvas", {static: false}) overlayCanvas: ElementRef;
 
+  canvasService: CanvasService;
+
   constructor() { }
 
   ngOnInit() {
   }
 
   onImageLoad() {
+    this.canvasService = new CanvasService(this.overlayCanvas.nativeElement);
+    // TODO :
+    // WebGL error when loading new image.
+    // probably scene.dispose(), bun when to trigger it ?
     this.refreshCanvas();
+    this.canvasService.drawScene();
   }
 
   refreshCanvas() {
     this.resizeCanvas();
-    // console.log(this.img.nativeElement.width);
-    // console.log(this.overlayCanvas.nativeElement.height);
-    // console.log(this.overlayCanvas.nativeElement.width);
-    // TODO: change canvas size depending on img size
   }
 
   resizeCanvas() {
     this.overlayCanvas.nativeElement.height = this.img.nativeElement.height;
     this.overlayCanvas.nativeElement.width = this.img.nativeElement.width;
+    this.canvasService.resize();
   }
 
 }
