@@ -10,8 +10,8 @@ import { ImageInstance } from '../../classes/imageInstance';
 export class ImageTabComponent implements OnInit {
 
   @Input() image: ImageInstance;
-  @ViewChild("img") img: ElementRef;
-  @ViewChild("overlayCanvas") overlayCanvas: ElementRef;
+  @ViewChild("img", {static: false}) img: ElementRef;
+  @ViewChild("overlayCanvas", {static: false}) overlayCanvas: ElementRef;
 
   constructor() { }
 
