@@ -1,4 +1,4 @@
-<div *ngIf="image" id="container"> <!--(change)="refreshCanvas()"-->
+<div *ngIf="image" #container id="container"> <!--(change)="refreshCanvas()"-->
   <img #img *ngIf="image.uri"
             [(src)]="image.uri"
             id="img"

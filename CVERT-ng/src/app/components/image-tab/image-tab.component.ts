@@ -6,7 +6,8 @@ import { CanvasService } from '../../services/canvas.service';
 @Component({
   selector: 'app-image-tab',
   templateUrl: './image-tab.component.html',
-  styleUrls: ['./image-tab.component.scss']
+  styleUrls: ['./image-tab.component.scss'],
+  // providers: [CanvasService] // to add for two canvas
 })
 export class ImageTabComponent implements OnInit {
 
@@ -20,9 +21,6 @@ export class ImageTabComponent implements OnInit {
   }
 
   onImageLoad() {
-    // TODO :
-    // WebGL error when loading new image.
-    // probably scene.dispose(), bun when to trigger it ?
     if (!this.canvasService.isInit()) {
       this.canvasService.createScene(this.overlayCanvas);
       this.canvasService.animate();

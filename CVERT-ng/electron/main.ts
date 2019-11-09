@@ -33,7 +33,8 @@ function createWindow() {
     })
   );
   win.maximize();
-  // win.webContents.openDevTools();
+  win.webContents.openDevTools(); // to hide in prod
+  win.removeMenu();
   win.on('closed', () => {
     win = null;
   });
@@ -62,8 +63,9 @@ ipcMain.on('openAlgorithmParametersWindow', (event) => {
         slashes: true,
       })
   urlToNav = urlToNav + '#/parameters';
-  console.log(urlToNav);
   win.loadURL(urlToNav);
+  win.webContents.openDevTools(); // to hide in prod
+  win.removeMenu();
 })
 
 //save algorithm parameters to assets.json
