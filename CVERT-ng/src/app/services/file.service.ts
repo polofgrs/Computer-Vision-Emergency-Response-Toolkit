@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core'
 import { IpcRenderer } from 'electron'
 
 import { ImageInstance } from '../classes/imageInstance';
+import * as THREE from 'three';
 
 @Injectable({
   providedIn: 'root',

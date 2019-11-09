@@ -5,7 +5,8 @@
     "esModuleInterop": true,
     "outDir": "../out-tsc/app",
     "types": [
-      "node"
+      "node",
+      "webgl2"
     ]
   },
   "exclude": [
