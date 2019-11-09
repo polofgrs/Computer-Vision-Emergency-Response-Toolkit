@@ -1,58 +1,99 @@
-import { Injectable, OnDestroy } from '@angular/core';
 import * as THREE from 'three';
+import { Injectable, ElementRef, OnDestroy, NgZone } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
 })
-export class CanvasService {
+export class CanvasService implements OnDestroy {
+  private canvas: HTMLCanvasElement;
+  private renderer: THREE.WebGLRenderer;
+  private camera: THREE.PerspectiveCamera;
+  private scene: THREE.Scene;
+  private light: THREE.AmbientLight;
 
-  canvas: HTMLCanvasElement;
-  renderer: THREE.WebGLRenderer;
-  scene: THREE.Scene;
+  private cube: THREE.Mesh;
 
-  constructor(canvas: HTMLCanvasElement) {
-    this.canvas = canvas;
+  private frameId: number = null;
+
+  public constructor(private ngZone: NgZone) {}
+
+  public ngOnDestroy() {
+    if (this.frameId != null) {
+      cancelAnimationFrame(this.frameId);
+    }
   }
 
-  drawScene() {
-    var scene = new THREE.Scene();
-    var camera = new THREE.PerspectiveCamera( 75, this.canvas.width / this.canvas.height, 0.1, 1000 );
+  createScene(canvas: ElementRef<HTMLCanvasElement>): void {
+    // The first step is to get the reference of the canvas element from our HTML document
+    this.canvas = canvas.nativeElement;
 
-    var renderer = new THREE.WebGLRenderer({canvas: this.canvas});
-    renderer.setSize( this.canvas.width, this.canvas.height );
+    this.renderer = new THREE.WebGLRenderer({
+      canvas: this.canvas,
+      alpha: true,    // transparent background
+      antialias: true // smooth edges
+    });
+    this.renderer.setSize(this.canvas.width, this.canvas.height);
 
-    var geometry = new THREE.BoxGeometry( 1, 1, 1 );
-    var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-    var cube = new THREE.Mesh( geometry, material );
-    scene.add( cube );
+    // create the scene
+    this.scene = new THREE.Scene();
 
-    camera.position.z = 5;
+    this.camera = new THREE.PerspectiveCamera(
+      75, this.canvas.width /this.canvas.height, 0.1, 1000
+    );
+    this.camera.position.z = 5;
+    this.scene.add(this.camera);
 
-    function animate() {
-    	requestAnimationFrame( animate );
-      cube.rotation.x += 0.01;
-			cube.rotation.y += 0.01;
-    	renderer.render( scene, camera );
-    }
-    animate();
+    // soft white light
+    this.light = new THREE.AmbientLight( 0x404040 );
+    this.light.position.z = 10;
+    this.scene.add(this.light);
 
-    this.scene = scene;
-    this.renderer = renderer;
+    const geometry = new THREE.BoxGeometry(1, 1, 1);
+    const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+    this.cube = new THREE.Mesh( geometry, material );
+    this.scene.add(this.cube);
+
+  }
+
+  animate(): void {
+    // We have to run this outside angular zones,
+    // because it could trigger heavy changeDetection cycles.
+    this.ngZone.runOutsideAngular(() => {
+      if (document.readyState !== 'loading') {
+        this.render();
+      } else {
+        window.addEventListener('DOMContentLoaded', () => {
+          this.render();
+        });
+      }
+
+      window.addEventListener('resize', () => {
+        this.resize();
+      });
+    });
+  }
+
+  render() {
+    this.frameId = requestAnimationFrame(() => {
+      this.render();
+    });
+
+    this.cube.rotation.x += 0.01;
+    this.cube.rotation.y += 0.01;
+    this.renderer.render(this.scene, this.camera);
   }
 
   resize() {
-    if (typeof this.renderer !== "undefined") {
-      this.renderer.setSize(this.canvas.width, this.canvas.height);
-    }
+    const width = this.canvas.width;
+    const height = this.canvas.height;
+
+    this.camera.aspect = width / height;
+    this.camera.updateProjectionMatrix();
+
+    this.renderer.setSize( width, height );
   }
 
-  clear() {
-    this.scene.dispose();
-    this.scene = null;
+  isInit() {
+    return(typeof this.renderer !== "undefined");
   }
-
-  ngOnDestroy() {
-    this.clear();
-  }
-
 }

@@ -14,30 +14,28 @@ export class ImageTabComponent implements OnInit {
   @ViewChild("img", {static: false}) img: ElementRef;
   @ViewChild("overlayCanvas", {static: false}) overlayCanvas: ElementRef;
 
-  canvasService: CanvasService;
-
-  constructor() { }
+  constructor(private canvasService: CanvasService) { }
 
   ngOnInit() {
   }
 
   onImageLoad() {
-    this.canvasService = new CanvasService(this.overlayCanvas.nativeElement);
     // TODO :
     // WebGL error when loading new image.
     // probably scene.dispose(), bun when to trigger it ?
-    this.refreshCanvas();
-    this.canvasService.drawScene();
-  }
-
-  refreshCanvas() {
+    if (!this.canvasService.isInit()) {
+      this.canvasService.createScene(this.overlayCanvas);
+      this.canvasService.animate();
+    }
     this.resizeCanvas();
   }
 
   resizeCanvas() {
-    this.overlayCanvas.nativeElement.height = this.img.nativeElement.height;
-    this.overlayCanvas.nativeElement.width = this.img.nativeElement.width;
-    this.canvasService.resize();
+    if (typeof this.img !== "undefined" && typeof this.overlayCanvas !== "undefined") {
+      this.overlayCanvas.nativeElement.height = this.img.nativeElement.height;
+      this.overlayCanvas.nativeElement.width = this.img.nativeElement.width;
+      this.canvasService.resize();
+    }
   }
 
 }
