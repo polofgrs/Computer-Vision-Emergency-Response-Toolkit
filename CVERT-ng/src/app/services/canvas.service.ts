@@ -57,7 +57,6 @@ export class CanvasService implements OnDestroy {
 
     // ground plane (transparent, just for the intersection)
     var geometry = new THREE.PlaneBufferGeometry( 2000, 2000 );
-    // geometry.computeFaceNormals();
     var material = new THREE.MeshBasicMaterial({
       opacity: 0,
       transparent: true,
@@ -68,10 +67,10 @@ export class CanvasService implements OnDestroy {
 
     // position helper
     var coneGeometry = new THREE.ConeBufferGeometry(1, 1, 8);
-		// coneGeometry.translate( 0, 50, 0 );
 		coneGeometry.rotateX( Math.PI / 2 );
 		this.helper = new THREE.Mesh( coneGeometry, new THREE.MeshNormalMaterial() );
-		this.scene.add( this.helper );
+    this.helper.rotation.x = - Math.PI / 2;
+		this.scene.add(this.helper);
 
     this.canvas.addEventListener( 'mousemove', this.onMouseMove.bind(this), false );
 
@@ -81,15 +80,14 @@ export class CanvasService implements OnDestroy {
   }
 
   onMouseMove( event ) {
-    this.mouse.x = ( event.clientX / this.renderer.domElement.clientWidth ) * 2 - 1;
-		this.mouse.y = - ( event.clientY / this.renderer.domElement.clientHeight ) * 2 + 1;
-		this.raycaster.setFromCamera( this.mouse, this.camera );
-		// See if the ray from the camera into the world hits one of our meshes
+    this.mouse.x = ( (event.offsetX) / this.renderer.domElement.width ) * 2 - 1;
+		this.mouse.y = - ( (event.offsetY) / this.renderer.domElement.height ) * 2 + 1;
+    this.raycaster.setFromCamera( this.mouse, this.camera );
+		// See if the ray from the camera into the world hits the ground
 		var intersects = this.raycaster.intersectObject( this.ground );
 		// Toggle rotation bool for meshes that we clicked
 		if ( intersects.length > 0 ) {
-			this.helper.position.set( 0, 0, 0 );
-			this.helper.lookAt( intersects[ 0 ].face.normal );
+			// this.helper.position.set( 0, 0, 0);
 			this.helper.position.copy( intersects[ 0 ].point );
 		}
   }
