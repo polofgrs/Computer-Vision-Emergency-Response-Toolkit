@@ -17,6 +17,7 @@ export class CanvasService implements OnDestroy {
   private grid: THREE.GridHelper;
   private ground: THREE.Mesh;
   private helper: THREE.Mesh;
+  private marker: THREE.Mesh;
 
   private frameId: number = null;
 
@@ -75,9 +76,18 @@ export class CanvasService implements OnDestroy {
     // position helper
     var coneGeometry = new THREE.ConeBufferGeometry(1, 1, 8);
 		coneGeometry.rotateX( Math.PI / 2 );
-		this.helper = new THREE.Mesh( coneGeometry, new THREE.MeshNormalMaterial() );
+    var helperMaterial = new THREE.MeshNormalMaterial();
+		this.helper = new THREE.Mesh( coneGeometry, helperMaterial );
     this.helper.rotation.x = - Math.PI / 2;
 		this.scene.add(this.helper);
+
+    // position marker
+    var markerMaterial = new THREE.MeshBasicMaterial({
+      color: 0xff0000
+    });
+		this.marker = new THREE.Mesh( coneGeometry, markerMaterial );
+    this.marker.rotation.x = - Math.PI / 2;
+		this.scene.add(this.marker);
 
     this.canvas.addEventListener( 'mousemove', this.onMouseMove.bind(this), false );
     this.canvas.addEventListener( 'mousedown', this.onMouseDown.bind(this), false);
@@ -97,6 +107,7 @@ export class CanvasService implements OnDestroy {
   onMouseDown( event ) {
     var intersects = this.getIntersect( event );
     if ( intersects.length > 0 ) {
+      this.marker.position.copy(intersects[0].point);
       this.gisService.getGPS(intersects[0].point.x, intersects[0].point.z);
     }
   }
