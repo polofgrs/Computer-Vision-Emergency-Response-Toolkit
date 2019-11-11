@@ -12,6 +12,7 @@ import { CanvasService } from '../../services/canvas.service';
 export class ImageTabComponent implements OnInit {
 
   @Input() image: ImageInstance;
+  @Input() addOverlay: boolean;
   @ViewChild("img", {static: false}) img: ElementRef;
   @ViewChild("overlayCanvas", {static: false}) overlayCanvas: ElementRef;
 
@@ -21,11 +22,13 @@ export class ImageTabComponent implements OnInit {
   }
 
   onImageLoad() {
-    if (!this.canvasService.isInit()) {
-      this.canvasService.createScene(this.overlayCanvas);
-      this.canvasService.animate();
+    if (this.addOverlay) {
+      if (this.addOverlay && !this.canvasService.isInit()) {
+        this.canvasService.createScene(this.overlayCanvas);
+        this.canvasService.animate();
+      }
+      this.resizeCanvas();
     }
-    this.resizeCanvas();
   }
 
   resizeCanvas() {

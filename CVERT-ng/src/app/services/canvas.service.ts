@@ -21,6 +21,10 @@ export class CanvasService implements OnDestroy {
   private raycaster = new THREE.Raycaster();
   private mouse = new THREE.Vector2();
 
+  private altitude = 20;
+  private pitch = -90;
+  private fov = 70;
+
   public constructor(private ngZone: NgZone) {}
 
   public ngOnDestroy() {
@@ -44,10 +48,10 @@ export class CanvasService implements OnDestroy {
 
     // create the camera
     this.camera = new THREE.PerspectiveCamera(
-      70, this.canvas.width /this.canvas.height, 0.1, 500
+      this.fov, this.canvas.width /this.canvas.height, 0.1, 500
     );
-    this.camera.position.y = 23.9; // set(0, 10, 0);
-    this.camera.rotation.x = -22 * Math.PI / 180; // pitch angle (randians)
+    this.camera.position.y = this.altitude;
+    this.camera.rotation.x = this.pitch * Math.PI / 180; // pitch angle (randians)
     this.scene.add(this.camera);
 
     // soft white light
@@ -85,9 +89,7 @@ export class CanvasService implements OnDestroy {
     this.raycaster.setFromCamera( this.mouse, this.camera );
 		// See if the ray from the camera into the world hits the ground
 		var intersects = this.raycaster.intersectObject( this.ground );
-		// Toggle rotation bool for meshes that we clicked
 		if ( intersects.length > 0 ) {
-			// this.helper.position.set( 0, 0, 0);
 			this.helper.position.copy( intersects[ 0 ].point );
 		}
   }
@@ -122,6 +124,40 @@ export class CanvasService implements OnDestroy {
     this.camera.updateProjectionMatrix();
 
     this.renderer.setSize( width, height );
+  }
+
+  updateGIS(property: string, value: number) {
+    if (this.isInit()) {
+      // renderer initialized, we update the scene objects
+      switch(property) {
+        case 'altitude':
+          this.camera.position.y = value;
+          break;
+        case 'pitch':
+          this.camera.rotation.x = value * Math.PI / 180;
+          break;
+        case 'fov':
+          this.camera.fov = value;
+          break;
+        default:
+          console.log('not a known canvas update property');
+      }
+    } else {
+      // if renderer not initialized, update default properties
+      switch(property) {
+        case 'altitude':
+          this.altitude = value;
+          break;
+        case 'pitch':
+          this.pitch = value * Math.PI / 180;
+          break;
+        case 'fov':
+          this.fov = value;
+          break;
+        default:
+          console.log('not a known canvas update property');
+      }
+    }
   }
 
   isInit() {

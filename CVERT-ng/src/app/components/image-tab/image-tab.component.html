@@ -4,5 +4,7 @@
             id="img"
             (window:resize)="resizeCanvas()"
             (load)="onImageLoad()">
-  <canvas #overlayCanvas id="overlayCanvas"></canvas>
+  <canvas *ngIf="this.addOverlay"
+          #overlayCanvas
+          id="overlayCanvas"></canvas>
 </div>

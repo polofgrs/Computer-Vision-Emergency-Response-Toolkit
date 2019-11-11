@@ -19,16 +19,16 @@
 
     <div class="col-6 full-height" id="center-panel">
       <div class="row" id="top-picture">
-        <app-image-tab [(image)]="topImage" id="top-image"></app-image-tab>
+        <app-image-tab [(image)]="topImage" [addOverlay]="false" id="top-image"></app-image-tab>
       </div>
       <div class="row" id="bottom-picture">
-        <app-image-tab [(image)]="bottomImage" id="bottom-image"></app-image-tab>
+        <app-image-tab [(image)]="bottomImage" [addOverlay]="true" id="bottom-image"></app-image-tab>
       </div>
     </div>
 
     <div class="col-3 full-height" id="right-panel">
       <div class="row" id="GPS-tab">
-        <app-gps-tab *ngIf="topImage && topImage.gisData" [(image)]="topImage"></app-gps-tab>
+        <app-gps-tab *ngIf="topImage && topImage.gisData" [(gisData)]="topImage.gisData"></app-gps-tab>
       </div>
       <div class="row" id="top-histogram">
         <app-histogram-tab *ngIf="topImage" class="full-height full-width" [(histogramData)]="topImage.histogram"></app-histogram-tab>

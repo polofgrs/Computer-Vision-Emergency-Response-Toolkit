@@ -1,4 +1,4 @@
-import { app, BrowserWindow, dialog, ipcMain} from 'electron';
+import { app, BrowserWindow, dialog, ipcMain, Menu } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
 import * as fs from 'fs';
@@ -34,7 +34,7 @@ function createWindow() {
   );
   win.maximize();
   win.webContents.openDevTools(); // to hide in prod
-  win.removeMenu();
+  Menu.setApplicationMenu(null);
   win.on('closed', () => {
     win = null;
   });

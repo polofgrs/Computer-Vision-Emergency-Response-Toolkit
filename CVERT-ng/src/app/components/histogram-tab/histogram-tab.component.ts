@@ -1,8 +1,6 @@
 import { Component, OnInit, Input, ViewChild, ElementRef, OnChanges, SimpleChanges } from '@angular/core';
 import { Chart } from 'chart.js';
 
-import { BehaviorSubject } from 'rxjs';
-
 @Component({
   selector: 'app-histogram-tab',
   templateUrl: './histogram-tab.component.html',
@@ -66,7 +64,6 @@ export class HistogramTabComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['histogramData'].currentValue) {
-      // console.log(this.histogramData[0]);
       this.chart.data.datasets = [{
         data: this.histogramData[0].slice(0,254),
         borderColor: '#ff0000'

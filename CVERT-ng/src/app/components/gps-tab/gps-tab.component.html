@@ -1,19 +1,22 @@
-<div class="container mt-2" *ngIf="image.gisData">
+<div class="container mt-2" *ngIf="gisData">
   <form class="form">
 
     <div class="full-width">
-      <mat-form-field class="quarter-width px-1">
+      <mat-form-field class="quarter-width px-1"
+                      #altitude
+                      *ngIf="gisData.altitude">
         <mat-label>Altitude</mat-label>
-        <input matInput [(ngModel)]="image.gisData.altitude"
+        <input matInput [(ngModel)]="gisData.altitude"
                         type="number"
                         min="0"
                         step="0.5"
-                        name="altitude">
+                        name="altitude"
+                        (change)="updateCanvas('altitude')">
       </mat-form-field>
 
       <mat-form-field class="quarter-width px-1">
         <mat-label>unit</mat-label>
-        <mat-select [(ngModel)]="image.gisData.altitudeUnit"
+        <mat-select [(ngModel)]="gisData.altitudeUnit"
                     name="altitudeUnit">
           <mat-option value="feet">Feet</mat-option>
           <mat-option value="meters">Meters</mat-option>
@@ -22,31 +25,37 @@
     <!--/div>
 
     <div class="full-width"-->
-      <mat-form-field class="quarter-width px-1">
+      <mat-form-field class="quarter-width px-1"
+                      #fov
+                      *ngIf="gisData.fov">
         <mat-label>FOV (deg)</mat-label>
-        <input matInput [(ngModel)]="image.gisData.fov"
+        <input matInput [(ngModel)]="gisData.fov"
                         type="number"
                         min="0"
                         max="180"
                         step="0.1"
-                        name="type">
+                        name="fov"
+                        (change)="updateCanvas('fov')">
       </mat-form-field>
 
-      <mat-form-field class="quarter-width px-1">
+      <mat-form-field class="quarter-width px-1"
+                      #pitch
+                      *ngIf="gisData.pitch">
         <mat-label>Pitch (deg)</mat-label>
-        <input matInput [(ngModel)]="image.gisData.pitch"
+        <input matInput [(ngModel)]="gisData.pitch"
                         type="number"
                         min="-90"
                         max="0"
                         step="0.1"
-                        name="pitch">
+                        name="pitch"
+                        (change)="updateCanvas('pitch')">
       </mat-form-field>
     </div>
 
     <div class="full-width">
       <mat-form-field class="quarter-width px-1">
         <mat-label>Latitude</mat-label>
-        <input matInput [(ngModel)]="image.gisData.latitude"
+        <input matInput [(ngModel)]="gisData.latitude"
                         type="number"
                         step="0.00001"
                         name="latitude">
@@ -54,7 +63,7 @@
 
       <mat-form-field class="quarter-width px-1">
         <mat-label>Longitude</mat-label>
-        <input matInput [(ngModel)]="image.gisData.longitude"
+        <input matInput [(ngModel)]="gisData.longitude"
                         type="number"
                         step="0.00001"
                         name="longitude">
@@ -62,7 +71,7 @@
 
       <mat-form-field class="quarter-width px-1">
         <mat-label>unit</mat-label>
-        <mat-select [(ngModel)]="image.gisData.positionUnit"
+        <mat-select [(ngModel)]="gisData.positionUnit"
                     name="positionUnit">
           <mat-option value="gps">GPS</mat-option>
           <mat-option value="usgn">USGN</mat-option>
@@ -73,7 +82,7 @@
     <div class="full-width"-->
       <mat-form-field class="quarter-width px-1">
         <mat-label>heading (deg)</mat-label>
-        <input matInput [(ngModel)]="image.gisData.heading"
+        <input matInput [(ngModel)]="gisData.heading"
                         type="number"
                         min="-180"
                         max="180"
