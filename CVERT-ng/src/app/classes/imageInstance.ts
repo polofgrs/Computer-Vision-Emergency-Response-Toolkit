@@ -1,6 +1,8 @@
 import { Observable, Observer } from 'rxjs';
 import * as assets from '../../assets/assets.json';
+
 import { ServerService } from '../services/server.service';
+import { GisService } from '../services/gis.service';
 
 import Jimp from 'jimp';
 import { Filter } from './filter';
@@ -12,12 +14,13 @@ export class ImageInstance {
   uri: string;
   histogram: number[][];
   gisData: GisData;
+  gisService: GisService;
 
-  constructor(uri) {
-    this.update(uri);
+  constructor(uri, gisService: GisService) {
+    this.update(uri, gisService);
   }
 
-  update(uri) {
+  update(uri, gisService: GisService) {
     // console.log(uri.toString());
     Jimp.read(uri).then(image => {
       var resizedImage = image.resize(800, Jimp.AUTO);
@@ -27,7 +30,8 @@ export class ImageInstance {
         const ipc = (<any>window).require('electron').ipcRenderer;
         ipc.once("pathExistsResponse", (event, pathExists) => {
           if (pathExists) {
-            this.gisData = new GisData(uri);
+            this.gisService = gisService;
+            this.gisData = new GisData(uri, gisService);
           }
         });
         ipc.send("pathExists", uri);

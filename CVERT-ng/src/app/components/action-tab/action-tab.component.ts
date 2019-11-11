@@ -2,6 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 import { ImageInstance } from '../../classes/imageInstance';
 import { FileService } from '../../services/file.service';
+import { GisService } from '../../services/gis.service';
 
 @Component({
   selector: 'app-action-tab',
@@ -16,7 +17,8 @@ export class ActionTabComponent implements OnInit {
   @Input() bottomImage: ImageInstance;
   @Output() bottomImageChange = new EventEmitter();
 
-  constructor(private fileService: FileService) { }
+  constructor(private fileService: FileService,
+              private gisService: GisService) { }
 
   ngOnInit() { }
 
@@ -24,9 +26,9 @@ export class ActionTabComponent implements OnInit {
     if(event.target.files && event.target.files.length) {
       var path = event.target.files[0].path;
       // console.log(event.target.files[0].path);
-      this.topImage = new ImageInstance(path);
+      this.topImage = new ImageInstance(path, this.gisService);
       this.topImageChange.emit(this.topImage);
-      this.bottomImage = new ImageInstance(path);
+      this.bottomImage = new ImageInstance(path, this.gisService);
       this.bottomImageChange.emit(this.bottomImage);
     }
   }

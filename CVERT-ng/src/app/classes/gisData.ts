@@ -1,4 +1,4 @@
-// import { IpcRenderer } from 'electron'
+import { GisService } from '../services/gis.service';
 
 export class GisData {
 
@@ -14,15 +14,21 @@ export class GisData {
   longitude: number;
   heading: number; // degrees
 
-  constructor(path: string) {
-    this.getGISdataFromPath(path);
+  gisService: GisService;
+
+  markerLat: number;
+  markerLon: number;
+
+  constructor(path: string, gisService: GisService) {
+    this.gisService = gisService;
+    this.getGISdataFromPath(path, gisService);
     this.altitudeUnit = "meters"
     this.positionUnit = "gps";
     this.fovPreset = "custom";
     this.fov = 70;
   }
 
-  getGISdataFromPath(path: string) {
+  getGISdataFromPath(path: string, gisService: GisService) {
     const ipc = (<any>window).require('electron').ipcRenderer;
     ipc.once("getGISdataResponse", (event, gisData) => {
       if (gisData != {}) {
@@ -43,8 +49,14 @@ export class GisData {
         this.heading = 0;
         this.pitch = -90;
       }
+      this.gisService.setGis(this);
     });
     ipc.send("getGISdata", path);
+  }
+
+  serMarkerPos(lat: number, lon: number) {
+    this.markerLat = lat;
+    this.markerLon = lon;
   }
 
 }

@@ -69,7 +69,7 @@ export class FiltersTabComponent implements OnInit {
 
   applyFilters() {
     this.topImage.applyFilterList(this.filtersList, this.server).then(result => {
-      this.bottomImage.update(result);
+      this.bottomImage.update(result, this.bottomImage.gisService);
       this.bottomImageChange.emit(this.bottomImage);
       // console.log(this.bottomImage);
     });

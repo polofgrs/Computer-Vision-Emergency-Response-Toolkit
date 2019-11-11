@@ -3,6 +3,7 @@ import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { GisData } from '../../classes/gisData';
 
 import { CanvasService } from '../../services/canvas.service';
+import { GisService } from '../../services/gis.service';
 
 @Component({
   selector: 'app-gps-tab',
@@ -30,7 +31,8 @@ export class GpsTabComponent implements OnInit {
     }
   }
 
-  constructor(private canvasService: CanvasService) {
+  constructor(private canvasService: CanvasService,
+              private gisService: GisService) {
   }
 
   ngOnInit() {
@@ -53,6 +55,7 @@ export class GpsTabComponent implements OnInit {
     }
     if (typeof value !== 'undefined') {
       this.canvasService.updateGIS(property, value);
+      this.gisService.setGis(this.gisData);
     }
   }
 

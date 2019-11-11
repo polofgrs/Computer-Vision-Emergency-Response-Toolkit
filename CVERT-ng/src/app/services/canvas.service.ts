@@ -1,6 +1,8 @@
 import * as THREE from 'three';
 import { Injectable, ElementRef, OnDestroy, NgZone } from '@angular/core';
 
+import { GisService } from '../services/gis.service';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -25,7 +27,8 @@ export class CanvasService implements OnDestroy {
   private pitch = -90;
   private fov = 70;
 
-  public constructor(private ngZone: NgZone) {}
+  public constructor(private ngZone: NgZone,
+                     private gisService: GisService) {}
 
   public ngOnDestroy() {
     if (this.frameId != null) {
@@ -77,6 +80,7 @@ export class CanvasService implements OnDestroy {
 		this.scene.add(this.helper);
 
     this.canvas.addEventListener( 'mousemove', this.onMouseMove.bind(this), false );
+    this.canvas.addEventListener( 'mousedown', this.onMouseDown.bind(this), false);
 
     // grid helper
     this.grid = new THREE.GridHelper( 1000, 100, 0x000000, 0x888888 );
@@ -84,14 +88,25 @@ export class CanvasService implements OnDestroy {
   }
 
   onMouseMove( event ) {
+    var intersects = this.getIntersect( event );
+		if ( intersects.length > 0 ) {
+			this.helper.position.copy( intersects[ 0 ].point );
+		}
+  }
+
+  onMouseDown( event ) {
+    var intersects = this.getIntersect( event );
+    if ( intersects.length > 0 ) {
+      this.gisService.getGPS(intersects[0].point.x, intersects[0].point.z);
+    }
+  }
+
+  getIntersect( event ) {
     this.mouse.x = ( (event.offsetX) / this.renderer.domElement.width ) * 2 - 1;
 		this.mouse.y = - ( (event.offsetY) / this.renderer.domElement.height ) * 2 + 1;
     this.raycaster.setFromCamera( this.mouse, this.camera );
 		// See if the ray from the camera into the world hits the ground
-		var intersects = this.raycaster.intersectObject( this.ground );
-		if ( intersects.length > 0 ) {
-			this.helper.position.copy( intersects[ 0 ].point );
-		}
+		return(this.raycaster.intersectObject( this.ground ));
   }
 
   animate(): void {
@@ -138,6 +153,7 @@ export class CanvasService implements OnDestroy {
           break;
         case 'fov':
           this.camera.fov = value;
+          this.camera.updateProjectionMatrix();
           break;
         default:
           console.log('not a known canvas update property');
