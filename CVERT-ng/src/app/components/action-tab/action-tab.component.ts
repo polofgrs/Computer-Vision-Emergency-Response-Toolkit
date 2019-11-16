@@ -23,8 +23,11 @@ export class ActionTabComponent implements OnInit {
   @Input() filtersList: Array<Filter>;
   @Output() filtersListChange = new EventEmitter();
 
-  private inputFiles = "Choose input files";
-  private outputFolder = "Choose output folder";
+  private inputLabel = "Input";
+  private outputLabel = "Output";
+
+  private inputFiles: string[];
+  private outputDir: string;
 
   constructor(private fileService: FileService,
               private serverService: ServerService,
@@ -47,18 +50,29 @@ export class ActionTabComponent implements OnInit {
     this.fileService.saveImage(this.bottomImage);
   }
 
-  onInputChange(event: any) {
-    console.log(event.target.files);
-    this.inputFiles = event.target.files;
-    // TODO : update display
+  getInputFiles() {
+    this.fileService.getIntputFiles().then((filePaths) => {
+      if (filePaths.length > 0) {
+        console.log(filePaths);
+        this.inputFiles = filePaths;
+        this.inputLabel = 'In: ' + filePaths.length.toString() + ' files';
+      } else {
+        console.log('no input files selected');
+      }
+    });
   }
 
-  onOutputChange(event: any) {
-    console.log(event.target.files);
-    this.outputFolder = event.target.files;
-    // TODO : update display
-    // TODO : when folder empty, the path cannot display...
-    // Maybe go through IPC w/ Electron ?
+  getOutputDirectory() {
+    this.fileService.getOutputDirectory().then((dirPath) => {
+      if (dirPath !== '') {
+        console.log(dirPath);
+        this.outputDir = dirPath;
+        var dirSplit = dirPath.split('/');
+        this.outputLabel = 'Out: ' + dirSplit[dirSplit.length - 1];
+      } else {
+        console.log('no output folder selected');
+      }
+    });
   }
 
   applyFilters() {

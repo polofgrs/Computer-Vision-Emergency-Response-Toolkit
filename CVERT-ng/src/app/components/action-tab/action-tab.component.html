@@ -1,6 +1,7 @@
-<div class="col full-height full-width">
+<div class="col full-height pt-3 full-width">
+
   <div class="row full-width mx-auto open-save">
-    <div class="col-6 my-3 open-button">
+    <div class="col-6 open-button">
       <button mat-raised-button color="primary" (click)="fileInput.click()">
         Open
       </button>
@@ -10,14 +11,14 @@
             accept="image/*"
             (change)="openImage($event)" >
     </div>
-    <div class="col-6 my-3 save-button">
+    <div class="col-6 save-button">
       <button mat-raised-button color="primary" (click)="saveImage()" [disabled]="!bottomImage">
         Save
       </button>
     </div>
   </div>
 
-  <div class="row my-3 mx-auto full-width">
+  <!--div class="row my-3 mx-auto full-width">
     <div class="col-12 open-button">
       <div class="input-group align-middle full-width mx-auto">
         <div class="custom-file">
@@ -36,6 +37,19 @@
           <label class="custom-file-label" for="outputGroupFile">{{outputFolder}}</label>
         </div>
       </div>
+    </div>
+  </div-->
+
+  <div class="row full-width mx-auto open-save">
+    <div class="col-6">
+      <button mat-raised-button color="primary" (click)="getInputFiles()">
+        {{inputLabel}}
+      </button>
+    </div>
+    <div class="col-6">
+      <button mat-raised-button color="primary" (click)="getOutputDirectory()">
+        {{outputLabel}}
+      </button>
     </div>
   </div>
 

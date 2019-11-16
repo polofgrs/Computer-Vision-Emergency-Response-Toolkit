@@ -124,6 +124,33 @@ ipcMain.on('pathExists', (event, path: string) => {
   win.webContents.send('pathExistsResponse', fs.lstatSync(path).isFile());
 })
 
+//get input directory
+ipcMain.on('getInputFiles', (event) => {
+  dialog.showOpenDialog({
+    properties: ['openFile', 'multiSelections'],
+    filters: [{ name: 'Images',
+                extensions: ['jpg', 'png', 'gif']
+              }]
+  }).then((result) => {
+    if (!result.canceled && result.filePaths != undefined) {
+      win.webContents.send('getInputFilesResponse', result.filePaths);
+    } else {
+      win.webContents.send('getInputFilesResponse', []);
+    }
+  });
+})
+
+//get output directory
+ipcMain.on('getOutputDirectory', (event) => {
+  dialog.showOpenDialog({properties: ['openDirectory']}).then((result) => {
+    if (!result.canceled && result.filePaths != undefined) {
+      win.webContents.send('getOutputDirectoryResponse', result.filePaths[0]);
+    } else {
+      win.webContents.send('getOutputDirectoryResponse', '');
+    }
+  });
+})
+
 // XMP getter from file Exif
 function getXMPfromExif(exif: string) {
   var gisData = {};

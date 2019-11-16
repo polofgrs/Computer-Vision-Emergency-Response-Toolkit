@@ -28,6 +28,24 @@ export class FileService {
     });
   }
 
+  async getOutputDirectory() {
+    return new Promise<string>((resolve, reject) => {
+      this.ipc.once('getOutputDirectoryResponse', (event, path) => {
+        resolve(path);
+      });
+      this.ipc.send('getOutputDirectory');
+    })
+  }
+
+  async getIntputFiles() {
+    return new Promise<string[]>((resolve, reject) => {
+      this.ipc.once('getInputFilesResponse', (event, path) => {
+        resolve(path);
+      });
+      this.ipc.send('getInputFiles');
+    })
+  }
+
   openParameters() {
     this.ipc.send('openAlgorithmParametersWindow');
   }
