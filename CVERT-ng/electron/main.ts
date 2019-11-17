@@ -87,7 +87,7 @@ ipcMain.on('saveAlgorithmParameters', (event, algorithmParameters) => {
   });
 })
 
-//file get
+//file save
 ipcMain.on('saveFile', (event, base64Data: string, mime: string) => {
   var mimeList = mime.split("/");
   var filename = "output." + mimeList[1];
@@ -107,12 +107,29 @@ ipcMain.on('saveFile', (event, base64Data: string, mime: string) => {
   // win.webContents.send('saveFileResponse', "saved !");
 })
 
+//file save without dialog
+ipcMain.on('saveFileToPath', (event, base64Data: string, mime: string, path: string) => {
+  var mimeList = mime.split("/");
+  var reg = '^data:' + mimeList[0] + '\\/' + mimeList[1] + ';base64,';
+  var regex = new RegExp(reg);
+  base64Data = base64Data.replace(regex, "");
+  fs.writeFile(path, base64Data, 'base64', (err) => {
+    if (err) throw err;
+    console.log('file saved');
+  })
+})
+
 //GIS data get
 ipcMain.on('getGISdata', (event, path: string) => {
   if (fs.lstatSync(path).isFile()) {
     fs.readFile(path, (err, data) => {
       exifr.parse(data, {'xmp': true}).then(exif => {
-        var xmpData = getXMPfromExif(exif.xmp);
+        var xmpData = {};
+        try {
+          xmpData = getXMPfromExif(exif.xmp);
+        } catch(err) {
+          console.log('no XMP data found');
+        }
         win.webContents.send('getGISdataResponse', xmpData);
       })
     })

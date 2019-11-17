@@ -16,6 +16,14 @@ def handlePost(algorithm, sourcePath, targetPath, parameters):
             'precentage': resultImage[2]
         }
         return(resultDict)
+    elif algorithm == 'gps':
+        # TODO : implement GPS seek algorithm
+        resultDict = {
+            'image': targetPath,
+            'time': 0,
+            'percentage': 0
+        }
+        return(resultDict)
     return('ok')
 
 

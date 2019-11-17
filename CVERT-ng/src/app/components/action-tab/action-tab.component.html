@@ -42,12 +42,12 @@
 
   <div class="row full-width mx-auto open-save">
     <div class="col-6">
-      <button mat-raised-button color="primary" (click)="getInputFiles()">
+      <button mat-raised-button (click)="getInputFiles()">
         {{inputLabel}}
       </button>
     </div>
     <div class="col-6">
-      <button mat-raised-button color="primary" (click)="getOutputDirectory()">
+      <button mat-raised-button (click)="getOutputDirectory()">
         {{outputLabel}}
       </button>
     </div>
@@ -55,12 +55,12 @@
 
   <div class="row full-width mx-auto open-save">
     <div class="col-6">
-      <button mat-raised-button color="primary" [disabled]="!filtersList.length" (click)="applyFilters()">
+      <button mat-raised-button color="accent" [disabled]="!filtersList.length || !inputFiles || !outputDir" (click)="applyFilters()">
         Apply filters
       </button>
     </div>
     <div class="col-6">
-      <button mat-raised-button color="primary" [disabled]="!topImage" (click)="applyGPS()">
+      <button mat-raised-button color="accent" [disabled]="!topImage || !inputFiles || !outputDir" (click)="applyGPS()">
         Look for GPS
       </button>
     </div>

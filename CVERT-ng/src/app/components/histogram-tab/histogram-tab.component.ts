@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, ElementRef, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef, OnChanges, SimpleChanges, AfterViewInit } from '@angular/core';
 import { Chart } from 'chart.js';
 
 @Component({
@@ -6,10 +6,10 @@ import { Chart } from 'chart.js';
   templateUrl: './histogram-tab.component.html',
   styleUrls: ['./histogram-tab.component.scss']
 })
-export class HistogramTabComponent implements OnInit, OnChanges {
+export class HistogramTabComponent implements OnInit, OnChanges, AfterViewInit {
 
   @Input() histogramData: number[][];
-  @ViewChild("histogramCanvas", {static: true}) histogramCanvas: ElementRef;
+  @ViewChild("histogramCanvas", {static: false}) histogramCanvas: ElementRef;
 
   chart: Chart;
   labels: Array<number>;
@@ -21,62 +21,78 @@ export class HistogramTabComponent implements OnInit, OnChanges {
     for (var i=0; i<this.labels.length; i++) {
       this.labels[i] = i;
     }
-    this.chart = new Chart(this.histogramCanvas.nativeElement, {
-      type: "line",
-      data: {
-        labels: this.labels,
-        datasets: []
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        layout: {
-          padding: {
-            left: 20,
-            right: 20,
-            top: 20,
-            bottom: 20
-          }
+  }
+
+  ngAfterViewInit() {
+    this.createChart(this.getDatasetsFromHistogramData());
+  }
+
+  getDatasetsFromHistogramData(){
+    return([{
+      data: this.histogramData[0].slice(0,254),
+      borderColor: '#ff0000'
+    },
+    {
+      data: this.histogramData[1].slice(0,254),
+      borderColor: '#00ff00'
+    },
+    {
+      data: this.histogramData[2].slice(0,254),
+      borderColor: '#0000ff'
+    }]);
+  }
+
+  createChart(datasets) {
+    if (typeof this.histogramCanvas !== 'undefined') {
+      this.chart = new Chart(this.histogramCanvas.nativeElement, {
+        type: "line",
+        data: {
+          labels: this.labels,
+          datasets: datasets
         },
-        elements: {
-          point: {
-            radius: 0
-          }
-        },
-        legend: {
-          display: false
-        },
-        scales: {
-          yAxes: [{
-            ticks: {
-              display: false
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          layout: {
+            padding: {
+              left: 20,
+              right: 20,
+              top: 20,
+              bottom: 20
             }
-          }],
-          xAxes: [{
-            ticks: {
-              display: false
+          },
+          elements: {
+            point: {
+              radius: 0
             }
-          }]
+          },
+          legend: {
+            display: false
+          },
+          scales: {
+            yAxes: [{
+              ticks: {
+                display: false
+              }
+            }],
+            xAxes: [{
+              ticks: {
+                display: false
+              }
+            }]
+          }
         }
-      }
-    });
+      });
+    }
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['histogramData'].currentValue) {
-      this.chart.data.datasets = [{
-        data: this.histogramData[0].slice(0,254),
-        borderColor: '#ff0000'
-      },
-      {
-        data: this.histogramData[1].slice(0,254),
-        borderColor: '#00ff00'
-      },
-      {
-        data: this.histogramData[2].slice(0,254),
-        borderColor: '#0000ff'
-      }]
-      this.chart.update();
+      var datasets = this.getDatasetsFromHistogramData();
+      if (typeof this.chart !== "undefined") {
+        this.chart.data.datasets = datasets;
+        this.chart.update();
+      }
     }
   }
 

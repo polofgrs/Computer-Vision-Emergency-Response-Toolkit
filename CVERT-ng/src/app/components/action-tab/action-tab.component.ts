@@ -35,13 +35,15 @@ export class ActionTabComponent implements OnInit {
 
   ngOnInit() { }
 
-  openImage(event: any) {
+  async openImage(event: any) {
     if(event.target.files && event.target.files.length) {
       var path = event.target.files[0].path;
       // console.log(event.target.files[0].path);
-      this.topImage = new ImageInstance(path, this.gisService);
+      this.topImage = new ImageInstance();
+      await this.topImage.update(path, this.gisService);
       this.topImageChange.emit(this.topImage);
-      this.bottomImage = new ImageInstance(path, this.gisService);
+      this.bottomImage = new ImageInstance();
+      await this.bottomImage.update(path, this.gisService);
       this.bottomImageChange.emit(this.bottomImage);
     }
   }
@@ -75,15 +77,30 @@ export class ActionTabComponent implements OnInit {
     });
   }
 
-  applyFilters() {
-    console.log('apply filters');
-    // TODO : send instruction to server
+  async applyFilters() {
+    for (var filePath of this.inputFiles) {
+      var image = new ImageInstance();
+      await image.update(filePath, this.gisService);
+      await image.applyFilterList(this.filtersList, this.serverService).then(async (result) => {
+        await image.update(result, image.gisService).then(async (res) => {
+          var pathSplit = filePath.split('/');
+          pathSplit = pathSplit[pathSplit.length - 1].split('.');
+          var name = pathSplit[pathSplit.length - 2] + '-mod.' + pathSplit[pathSplit.length - 1];
+          var imagePath = this.outputDir + '/' + name;
+          console.log(imagePath);
+          await this.fileService.saveImageToPath(image, imagePath);
+        });
+      })
+    }
   }
 
-  applyGPS() {
-    console.log('apply GPS');
-    // TODO : code algorithm to find GPS
-    // in all images of inputFiles
+  async applyGPS() {
+    for (var filePath of this.inputFiles) {
+      // find a way to send GIS !
+      var result = await this.serverService.send('gps', filePath, this.outputDir);
+      console.log(result);
+    }
+    console.log('all files rendered');
   }
 
 }

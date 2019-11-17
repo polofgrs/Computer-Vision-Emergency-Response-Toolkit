@@ -16,35 +16,43 @@ export class ImageInstance {
   gisData: GisData;
   gisService: GisService;
 
-  constructor(uri, gisService: GisService) {
-    this.update(uri, gisService);
+  constructor() {
   }
 
-  update(uri, gisService: GisService) {
+  async update(uri, gisService: GisService) {
     // console.log(uri.toString());
-    Jimp.read(uri).then(image => {
-      var resizedImage = image.resize(800, Jimp.AUTO);
-      this.jimpObject = resizedImage;
-      this.setBase64Data(resizedImage);
-      if (typeof uri == 'string') {
-        const ipc = (<any>window).require('electron').ipcRenderer;
-        ipc.once("pathExistsResponse", (event, pathExists) => {
-          if (pathExists) {
-            this.gisService = gisService;
-            this.gisData = new GisData(uri, gisService);
+    return new Promise((resolve, reject) => {
+      Jimp.read(uri).then(image => {
+        var resizedImage = image.resize(800, Jimp.AUTO);
+        this.jimpObject = resizedImage;
+        this.setBase64Data(resizedImage).then((data) => {
+          if (typeof uri == 'string') {
+            const ipc = (<any>window).require('electron').ipcRenderer;
+            ipc.once("pathExistsResponse", (event, pathExists) => {
+              if (pathExists) {
+                this.gisService = gisService;
+                this.gisData = new GisData(uri, gisService);
+              }
+              resolve();
+            });
+            ipc.send("pathExists", uri);
+          } else {
+            resolve();
           }
         });
-        ipc.send("pathExists", uri);
-      }
+      });
     });
   }
 
-  setBase64Data(image: Jimp) {
+  async setBase64Data(image: Jimp) {
     var self = this;
-    image.getBase64(image.getMIME(), function(err, base64data) {
-      self.uri = base64data;
-      self.getHistogram(base64data).subscribe(data => {
-        self.histogram = data;
+    return new Promise((resolve, reject) => {
+      image.getBase64(image.getMIME(), function(err, base64data) {
+        self.uri = base64data;
+        self.getHistogram(base64data).subscribe(data => {
+          self.histogram = data;
+          resolve();
+        });
       });
     });
   }
