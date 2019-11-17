@@ -176,7 +176,7 @@ export class CanvasService implements OnDestroy {
           this.altitude = value;
           break;
         case 'pitch':
-          this.pitch = value * Math.PI / 180;
+          this.pitch = value;
           break;
         case 'fov':
           this.fov = value;
