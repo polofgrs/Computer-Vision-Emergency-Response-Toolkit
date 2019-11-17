@@ -17,15 +17,16 @@ export class GisService {
   }
 
   getGPS(x: number, y: number) {
-    var posUAS = this.latLonToXY(this.gis.latitude, this.gis.longitude);
+    // https://www.movable-type.co.uk/scripts/latlong.html
     var relHdg = Math.atan(- x / y); // in rad
     var fullHdg = this.gis.heading * Math.PI/180 + relHdg; // in rad
     var dist = Math.sqrt(x*x + y*y); // in  m
-    var trgtX = posUAS[0] + dist * Math.sin(fullHdg);
-    var trgtY = posUAS[1] + dist * Math.cos(fullHdg);
-    var posTrgt = this.xyToLatLon(trgtX, trgtY);
-    this.gis.markerLat = posTrgt[0];
-    this.gis.markerLon = posTrgt[1];
+    var latitude = Math.asin( Math.sin(this.gis.latitude*Math.PI/180)*Math.cos(dist/this.radius)
+                + Math.cos(this.gis.latitude*Math.PI/180)*Math.sin(dist/this.radius)*Math.cos(fullHdg));
+    var longitude = this.gis.longitude*Math.PI/180 + Math.atan2(Math.sin(fullHdg)*Math.sin(dist/this.radius)*Math.cos(this.gis.latitude*Math.PI/180),
+                         Math.cos(dist/this.radius)-Math.sin(this.gis.latitude*Math.PI/180)*Math.sin(latitude));
+    this.gis.markerLat = latitude * 180 / Math.PI;
+    this.gis.markerLon = longitude * 180 / Math.PI;
   }
 
   latLonToXY(lat: number, lon: number) {

@@ -61,7 +61,7 @@
     </div>
     <div class="col-6">
       <button mat-raised-button color="accent"
-            [disabled]="!topImage || !inputFiles || !outputDir
+            [disabled]="!topImage || !inputFiles || !outputDir || !gisService.gis
                       || !gisService.gis.markerLat || !gisService.gis.markerLon"
             (click)="applyGPS()">
         Look for GPS

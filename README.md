@@ -6,7 +6,7 @@ __IMPORTANT NOTE:__
 This readme is in progress. Most of the information below is a general idea of what I'd like to do, and the present code and development process might not work. I will update this readme as frequently as possible.
 
 ## Introduction
-I basically first thought that C# code from [the initial repository](https://github.com/cvertdev/Computer-Vision-Emergency-Response-Toolkit) was not a great ides, for the following reasons :
+I basically first thought that C# code from [the initial repository](https://github.com/cvertdev/Computer-Vision-Emergency-Response-Toolkit) was not a great idea, for the following reasons :
 * Not really user-friendly,
 * Limited only to Windows Platforms,
 * Python packages and .NET framework need to be installed (almost) manually.   

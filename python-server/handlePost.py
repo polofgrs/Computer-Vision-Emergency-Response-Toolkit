@@ -20,7 +20,6 @@ def handleGPSfetch(sourcePath, targetPath, gpsTarget):
     # NEED to develop algorithm for GPS coordinates fetch
     import Algorithms.GPSfetch
     time = Algorithms.GPSfetch.GpsFetch(sourcePath, targetPath, gpsTarget)
-    print(time)
     resultDict = {
         'sourcePath': sourcePath,
         'targetPath': targetPath,
