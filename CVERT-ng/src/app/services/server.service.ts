@@ -52,16 +52,10 @@ export class ServerService {
     var jsonData = {
       "sourcePath": sourcePath,
       "targetPath": targetPath,
-      "gis": {
-        "latitude": gisData.latitude,
-        "longitude": gisData.longitude,
-        "heading": gisData.heading,
-        "altitude": gisData.altitude,
-        "fov": gisData.fov
-      },
       "gpsTarget": {
         "latitude": gisData.markerLat,
         "longitude": gisData.markerLon,
+        "fov": gisData.fov
       }
     };
     var that = this;

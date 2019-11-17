@@ -9,6 +9,8 @@ scikit-learn
 spectral
 argparse
 matplotlib
+python-xmp-toolkit
+beautifulsoup4
 
 flask
 flask_cors

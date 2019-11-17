@@ -22,9 +22,8 @@ def get():
         else:
             sourcePath = request.json.get('sourcePath')
             targetPath = request.json.get('targetPath')
-            gis = request.json.get('gis')
             gpsTarget = request.json.get('gpsTarget')
-            response = handlePost.handleGPSfetch(sourcePath, targetPath, gis, gpsTarget)
+            response = handlePost.handleGPSfetch(sourcePath, targetPath, gpsTarget)
     elif request.method == 'GET':
         response = Response(status=200)
     return(response)
