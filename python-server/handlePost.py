@@ -3,28 +3,28 @@ import numpy as np
 import base64
 import importlib
 
-def handlePost(algorithm, sourcePath, targetPath, parameters):
-    if targetPath == 'response':
-        image = data_uri_to_cv2_img(sourcePath)
-        moduleName = 'Algorithms.' + algorithm['libName']
-        module = importlib.import_module(moduleName)
-        resultImage = getattr(module, algorithm['pyFunction'])(image[1], parameters)
-        uri = cv2_img_to_data_uri(image[0], resultImage[0])
-        resultDict = {
-            'image': uri,
-            'time': resultImage[1],
-            'precentage': resultImage[2]
-        }
-        return(resultDict)
-    elif algorithm == 'gps':
-        # TODO : implement GPS seek algorithm
-        resultDict = {
-            'image': targetPath,
-            'time': 0,
-            'percentage': 0
-        }
-        return(resultDict)
-    return('ok')
+def handleFilter(algorithm, sourcePath, parameters):
+    image = data_uri_to_cv2_img(sourcePath)
+    moduleName = 'Algorithms.' + algorithm['libName']
+    module = importlib.import_module(moduleName)
+    resultImage = getattr(module, algorithm['pyFunction'])(image[1], parameters)
+    uri = cv2_img_to_data_uri(image[0], resultImage[0])
+    resultDict = {
+        'image': uri,
+        'time': resultImage[1],
+        'precentage': resultImage[2]
+    }
+    return(resultDict)
+
+def handleGPSfetch(sourcePath, targetPath, gis, gpsTarget):
+    # NEED to develop algorithm for GPS coordinates fetch
+    resultDict = {
+        'sourcePath': sourcePath,
+        'targetPath': targetPath,
+        'gis': gis,
+        'gpsTarget': gpsTarget
+    }
+    return(resultDict)
 
 
 def data_uri_to_cv2_img(uri):

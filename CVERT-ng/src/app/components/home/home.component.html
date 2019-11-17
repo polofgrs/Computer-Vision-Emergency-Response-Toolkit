@@ -28,7 +28,7 @@
 
     <div class="col-3 full-height" id="right-panel">
       <div class="row" id="GPS-tab">
-        <app-gps-tab *ngIf="topImage && topImage.gisData" [(gisData)]="topImage.gisData"></app-gps-tab>
+        <app-gps-tab *ngIf="topImage && gisService.gis" [(gisData)]="gisService.gis"></app-gps-tab>
       </div>
       <div class="row" id="top-histogram">
         <app-histogram-tab *ngIf="topImage" class="full-height full-width" [(histogramData)]="topImage.histogram"></app-histogram-tab>

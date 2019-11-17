@@ -7,7 +7,7 @@ import { GisData } from '../classes/gisData'
 })
 export class GisService {
 
-  private gis: GisData;
+  gis: GisData;
   private radius = 6371000; // earth radius, in m
 
   constructor() { }

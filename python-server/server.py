@@ -14,12 +14,17 @@ CORS(app)
 @app.route('/', methods=['GET', 'POST'])
 def get():
     if request.method == 'POST':
-        algorithm = request.json.get('algorithm')
-        sourcePath = request.json.get('sourcePath')
-        targetPath = request.json.get('targetPath')
-        parameters = request.json.get('parameters')
-        response = handlePost.handlePost(algorithm, sourcePath, targetPath, parameters)
-        # response = Response(status=200)
+        if request.json.get('targetPath') == 'response':
+            algorithm = request.json.get('algorithm')
+            sourcePath = request.json.get('sourcePath')
+            parameters = request.json.get('parameters')
+            response = handlePost.handleFilter(algorithm, sourcePath, parameters)
+        else:
+            sourcePath = request.json.get('sourcePath')
+            targetPath = request.json.get('targetPath')
+            gis = request.json.get('gis')
+            gpsTarget = request.json.get('gpsTarget')
+            response = handlePost.handleGPSfetch(sourcePath, targetPath, gis, gpsTarget)
     elif request.method == 'GET':
         response = Response(status=200)
     return(response)

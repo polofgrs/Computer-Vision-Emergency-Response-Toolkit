@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
+import { GisData } from '../classes/gisData';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -31,6 +33,40 @@ export class ServerService {
     return new Promise(function(resolve, reject) {
       that.http.get('assets/assets.json').subscribe(jsonParam => {
         let jsonData = that.getJsonFromParam(algorithm, sourcePath, targetPath, jsonParam['algorithmParameters']);
+        let httpHeaders = new HttpHeaders({
+          'Content-Type' : 'application/json'
+    	  });
+        let url = 'http://' + that.ip + ':' + that.port;
+        that.http.post<any>(url, jsonData, {headers: httpHeaders})
+        .subscribe((data) => {
+          console.log(data);
+          resolve(data);
+        })
+      });
+    })
+  }
+
+  sendGPSRequest(sourcePath: string[],
+                  targetPath: string,
+                  gisData: GisData) {
+    var jsonData = {
+      "sourcePath": sourcePath,
+      "targetPath": targetPath,
+      "gis": {
+        "latitude": gisData.latitude,
+        "longitude": gisData.longitude,
+        "heading": gisData.heading,
+        "altitude": gisData.altitude,
+        "fov": gisData.fov
+      },
+      "gpsTarget": {
+        "latitude": gisData.markerLat,
+        "longitude": gisData.markerLon,
+      }
+    };
+    var that = this;
+    return new Promise(function(resolve, reject) {
+      that.http.get('assets/assets.json').subscribe(jsonParam => {
         let httpHeaders = new HttpHeaders({
           'Content-Type' : 'application/json'
     	  });

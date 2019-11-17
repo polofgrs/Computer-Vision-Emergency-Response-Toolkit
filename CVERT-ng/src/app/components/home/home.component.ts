@@ -3,6 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { Filter } from '../../classes/filter';
 import { ImageInstance } from '../../classes/imageInstance';
 
+import { GisService } from '../../services/gis.service';
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -17,7 +19,7 @@ export class HomeComponent implements OnInit {
   filtersList: Array<Filter>;
   currentFilter: Filter;
 
-  constructor() {
+  constructor(private gisService: GisService) {
     // this.topImage = new ImageInstance("assets/cache/test.JPG");
     // this.bottomImage = new ImageInstance("assets/cache/test.JPG");
     this.filtersList = new Array<Filter>();

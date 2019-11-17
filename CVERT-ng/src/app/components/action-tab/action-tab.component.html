@@ -60,7 +60,12 @@
       </button>
     </div>
     <div class="col-6">
-      <button mat-raised-button color="accent" [disabled]="!topImage || !inputFiles || !outputDir" (click)="applyGPS()">
+      <button mat-raised-button color="accent"
+            [disabled]="!topImage || !inputFiles || !outputDir || !gisService.gis.fov
+                      || !gisService.gis.latitude || !gisService.gis.longitude
+                      || !gisService.gis.altitude || !gisService.gis.heading
+                      || !gisService.gis.markerLat || !gisService.gis.markerLon"
+            (click)="applyGPS()">
         Look for GPS
       </button>
     </div>
