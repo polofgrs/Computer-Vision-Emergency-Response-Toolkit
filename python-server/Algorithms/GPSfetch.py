@@ -3,6 +3,7 @@ from libxmp import XMPFiles
 import bs4
 import cv2
 import math
+import numpy as np
 
 def GpsFetch(sourcePath, targetPath, gpsTarget):
     t = timer.Timer()
@@ -21,7 +22,6 @@ def GpsFetch(sourcePath, targetPath, gpsTarget):
                 saveImage(image, sourcePath[i], targetPath)
             else:
                 print('GPS not intersecting ' + sourcePath[i])
-
     t.stop()
     return t.get_time()
 
@@ -73,28 +73,43 @@ def findPixel(xmp, gpsTarget):
     a = math.sin(dlat / 2)**2 + math.cos(lat1) * math.cos(lat2) * math.sin(dlon / 2)**2
     c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
     distance = radius * c
-    # Should add altitude as well !
-
-    # bearing (in rad)
-    y = math.sin(dlon) * math.cos(lat2)
-    x = math.cos(lat1) * math.sin(lat2) - math.sin(lat1) * math.cos(lat2) * math.cos(dlon)
-    bearing = math.atan2(y, x)
-
-    # not enough !
-
-    # idea : construct 2 vectors :
-    # - 1 for the camera direction
-    # - 1 for the vamera to target.
-    # compute the 2 angles from the camera
-    # convert them to image pixels
-
-    print(distance)
-    print(math.degrees(bearing))
 
     if distance < 1000:  # otherwise, too far
-        relativeHdg = (math.degrees(bearing) - xmp['heading']) / (gpsTarget['fov'] / 2)
-        print(relativeHdg)
 
+        # bearing (in rad)
+        y = math.sin(dlon) * math.cos(lat2)
+        x = math.cos(lat1) * math.sin(lat2) - math.sin(lat1) * math.cos(lat2) * math.cos(dlon)
+        bearing = math.atan2(y, x)
+        relBearing = unWrap(bearing - math.radians(xmp['heading']))
+
+        camVector = np.array([[0], [abs(xmp['altitude'] / math.tan(math.radians(xmp['pitch'])))], [-xmp['altitude']]])
+        tgtVector = np.array([[distance * math.sin(relBearing)], [distance * math.cos(relBearing)], [-xmp['altitude']]])
+
+        cos = math.cos(math.radians(xmp['pitch']))
+        sin = math.sin(math.radians(xmp['pitch']))
+
+        rotationMatrix = np.array([[1, 0, 0], [0, cos, sin], [0, -sin, cos]])
+        camVector = rotationMatrix.dot(camVector)
+        tgtVector = rotationMatrix.dot(tgtVector)
+
+        horAngle = math.atan2(tgtVector[0][0], tgtVector[1][0])
+        vertAngle = math.atan2(tgtVector[2][0], tgtVector[1][0])
+
+        fov = math.radians(gpsTarget['fov'])
+        xdimension = xmp['xdimension']
+        ydimension = xmp['ydimension']
+        ratio = xdimension / ydimension
+        vFov = 2 * math.atan2(math.tan(fov / 2), math.sqrt(1 + ratio**2))
+        hFov = 2 * math.atan2(ratio * math.tan(fov / 2), math.sqrt(1 + ratio**2))
+
+        hRatio = horAngle / (hFov / 2)
+        vRatio = vertAngle / (vFov / 2)
+
+        if abs(hRatio) < 1 and abs(vRatio) < 1:
+            xPixel = int((xdimension / 2) * (1 + hRatio))
+            yPixel = int((ydimension / 2) * (1 - vRatio))
+            return([xPixel, yPixel])
+        return
     return
 
 def drawCircle(path, pixels):
@@ -112,3 +127,10 @@ def saveImage(image, sourcePath, targetPath):
     filePath = targetPath + '/intersect-' + pathSplit[len(pathSplit) - 1]
     cv2.imwrite(filePath, image)
     return
+
+def unWrap(hdg):
+    while hdg > math.pi:
+        hdg -= 2 * math.pi
+    while hdg < -math.pi:
+        hdg += 2 * math.pi
+    return hdg

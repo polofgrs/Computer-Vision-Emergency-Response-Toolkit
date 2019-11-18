@@ -5,7 +5,7 @@ export class GisData {
   altitude: number;
   altitudeUnit: string; // feet or meters
 
-  fov: number; // degrees
+  fov: number; // degrees DIAGONAL !
   fovPreset: string;
   pitch: number; // degrees
 
@@ -25,7 +25,7 @@ export class GisData {
     this.altitudeUnit = "meters"
     this.positionUnit = "gps";
     this.fovPreset = "custom";
-    this.fov = 70;
+    this.fov = 94; // P3 diagonal FOV
   }
 
   getGISdataFromPath(path: string, gisService: GisService) {

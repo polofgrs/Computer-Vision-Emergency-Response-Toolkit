@@ -26,7 +26,7 @@ export class CanvasService implements OnDestroy {
 
   private altitude = 20;
   private pitch = -90;
-  private fov = 70;
+  private fov = 94; // P3 diagonal FOV
 
   public constructor(private ngZone: NgZone,
                      private gisService: GisService) {}
@@ -51,8 +51,12 @@ export class CanvasService implements OnDestroy {
     this.scene = new THREE.Scene();
 
     // create the camera
+    var ratio = this.canvas.width /this.canvas.height;
     this.camera = new THREE.PerspectiveCamera(
-      this.fov, this.canvas.width /this.canvas.height, 0.1, 500
+      this.getVertFovDeg(this.fov, ratio),
+      ratio,
+      0.1,
+      500
     );
     this.camera.position.y = this.altitude;
     this.camera.rotation.x = this.pitch * Math.PI / 180; // pitch angle (randians)
@@ -145,8 +149,9 @@ export class CanvasService implements OnDestroy {
   resize() {
     const width = this.canvas.width;
     const height = this.canvas.height;
-
-    this.camera.aspect = width / height;
+    var ratio = width / height;
+    this.camera.aspect = ratio;
+    this.camera.fov = this.getVertFovDeg(this.fov, ratio);
     this.camera.updateProjectionMatrix();
 
     this.renderer.setSize( width, height );
@@ -163,7 +168,8 @@ export class CanvasService implements OnDestroy {
           this.camera.rotation.x = value * Math.PI / 180;
           break;
         case 'fov':
-          this.camera.fov = value;
+          var ratio = this.canvas.width /this.canvas.height;
+          this.camera.fov = this.getVertFovDeg(value, ratio);
           this.camera.updateProjectionMatrix();
           break;
         default:
@@ -185,6 +191,12 @@ export class CanvasService implements OnDestroy {
           console.log('not a known canvas update property');
       }
     }
+  }
+
+  getVertFovDeg(diagFovDeg: number, ratio: number) {
+    var fov = 2 * Math.atan2(Math.tan(diagFovDeg*Math.PI/180/2), Math.sqrt(1+ratio*ratio));
+    console.log(fov*180/Math.PI);
+    return fov*180/Math.PI;
   }
 
   isInit() {

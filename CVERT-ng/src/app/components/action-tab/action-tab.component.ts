@@ -95,10 +95,8 @@ export class ActionTabComponent implements OnInit {
   }
 
   async applyGPS() {
-    for (var filePath of this.inputFiles) {
-      var result = await this.serverService.sendGPSRequest(this.inputFiles, this.outputDir, this.gisService.gis);
-      console.log(result);
-    }
+    var result = await this.serverService.sendGPSRequest(this.inputFiles, this.outputDir, this.gisService.gis);
+    console.log(result);
   }
 
 }
