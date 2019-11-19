@@ -9,7 +9,7 @@ export class GisData {
   fovPreset: string;
   pitch: number; // degrees
 
-  positionUnit: string; // gps or usgn
+  positionUnit: string; // gps or usng
   latitude: number;
   longitude: number;
   heading: number; // degrees
@@ -18,6 +18,8 @@ export class GisData {
 
   markerLat: number;
   markerLon: number;
+
+  markerUSNG: string;
 
   constructor(path: string, gisService: GisService) {
     this.gisService = gisService;

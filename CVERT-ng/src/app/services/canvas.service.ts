@@ -195,7 +195,6 @@ export class CanvasService implements OnDestroy {
 
   getVertFovDeg(diagFovDeg: number, ratio: number) {
     var fov = 2 * Math.atan2(Math.tan(diagFovDeg*Math.PI/180/2), Math.sqrt(1+ratio*ratio));
-    console.log(fov*180/Math.PI);
     return fov*180/Math.PI;
   }
 
