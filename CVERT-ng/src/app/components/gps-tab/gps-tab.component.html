@@ -4,14 +4,26 @@
     <div class="full-width">
       <mat-form-field class="quarter-width px-1"
                       #altitude
-                      *ngIf="gisData.altitude">
+                      *ngIf="gisData.altitude && gisData.altitudeUnit=='meters'">
         <mat-label>Altitude</mat-label>
         <input matInput [(ngModel)]="gisData.altitude"
                         type="number"
                         min="0"
                         step="0.5"
                         name="altitude"
-                        (change)="updateCanvas('altitude')">
+                        (change)="updateAltitude()">
+      </mat-form-field>
+
+      <mat-form-field class="quarter-width px-1"
+                      #altitude
+                      *ngIf="gisData.altitude && gisData.altitudeUnit=='feet'">
+        <mat-label>Altitude</mat-label>
+        <input matInput [(ngModel)]="altitudeFeet"
+                        type="number"
+                        min="0"
+                        step="0.5"
+                        name="altitude"
+                        (change)="updateAltitude()">
       </mat-form-field>
 
       <mat-form-field class="quarter-width px-1">

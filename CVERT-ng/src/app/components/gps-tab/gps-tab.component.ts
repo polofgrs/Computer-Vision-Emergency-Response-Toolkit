@@ -13,11 +13,13 @@ import { GisService } from '../../services/gis.service';
 export class GpsTabComponent implements OnInit {
 
   @Input() gisData: GisData;
+  altitudeFeet: number;
+  metersToFeet = 3.28084; // factor
 
   // wait for data init for change
   @ViewChild('altitude', {static: false}) set altitude(element) {
     if (element) {
-      this.updateCanvas('altitude');
+      this.updateAltitude();
     }
   }
   @ViewChild('pitch', {static: false}) set pitch(element) {
@@ -36,6 +38,16 @@ export class GpsTabComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.altitudeFeet = this.gisData.altitude * this.metersToFeet;
+  }
+
+  updateAltitude() {
+    if (this.gisData.altitudeUnit == "feet") {
+      this.gisData.altitude = Number((this.altitudeFeet / this.metersToFeet).toFixed(2));
+    } else {
+      this.altitudeFeet = this.gisData.altitude * this.metersToFeet;
+    }
+    this.updateCanvas('altitude');
   }
 
   updateCanvas(property: string) {
