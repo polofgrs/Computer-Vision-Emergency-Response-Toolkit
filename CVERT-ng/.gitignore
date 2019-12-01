@@ -42,3 +42,10 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+
+/releases
+!/dist/icon.ico
+!/dist/icon.png
+# !/dist/background.png
+# !/dist/background@2x.png
+# !/dist/icon.icns

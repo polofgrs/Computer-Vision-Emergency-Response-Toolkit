@@ -1,1 +1,4 @@
 *.pyc
+python-server/__pycache__
+python-server/build
+python-server/dist

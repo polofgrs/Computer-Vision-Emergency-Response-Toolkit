@@ -1,7 +1,7 @@
 import numpy as np
 import cv2
 from scipy.signal import convolve2d
-import os
+from os import path
 
 import timer
 
@@ -64,7 +64,7 @@ def aod_net(x, np_weights):
 	return relu(output)
 
 
-def Dehaze(img_path, Params = None, model_path = os.path.dirname(os.path.realpath(__file__)) + '/pretrained_aod_net_numpy.npy'):
+def Dehaze(img_path, Params = None, model_path = path.join(path.dirname(__file__), 'pretrained_aod_net_numpy.npy')):
 	"""
 	Primary function for interfacing with the dehazing network. Provide an image path and will return a numpy image.
 
@@ -110,11 +110,10 @@ def Dehaze(img_path, Params = None, model_path = os.path.dirname(os.path.realpat
 
 
 
-def dehaze_and_display(img_path, model_path = os.path.dirname(os.path.realpath(__file__)) + '/pretrained_aod_net_numpy.npy'):
+def dehaze_and_display(img_path, model_path = path.join(path.dirname(__file__), 'pretrained_aod_net_numpy.npy')):
 	"""
 	Dehazes and then displays the dehazed image.
 	"""
-
 	dehazed_image = Dehaze(img_path, model_path= model_path)
 	from PIL import Image
 	PIL_img = Image.fromarray(dehazed_image)

@@ -141,7 +141,8 @@ And the following prod libraries:
 * [Exifr](https://www.npmjs.com/package/exifr),
 * [Fast-xml-parser](https://www.npmjs.com/package/fast-xml-parser),
 * [Chart.js](https://www.chartjs.org/),
-* [Three.js](https://threejs.org/)
+* [Three.js](https://threejs.org/),
+* [usng.js](https://www.npmjs.com/package/usng.js)
 
 *You can find all of the npm libraries in [package.json](CVERT-ng/package.json).*
 
@@ -149,9 +150,9 @@ __Back-end:__
 [Python 3.6](https://www.python.org/) running a web server to handle image processing requests.   
 It uses the following dev libraries:
 * [PyInstaller](https://www.pyinstaller.org/),
-* [pip3](https://pip.pypa.io/en/stable/);
+* [pip3](https://pip.pypa.io/en/stable/).
 
-And the foollowing prod libraries:
+And the following prod libraries:
 * [Flask](https://palletsprojects.com/p/flask/),
 * All the [necessary libraries](python-server/requirements.txt) for the image processing algorithms.
 
@@ -166,6 +167,10 @@ cd CVERT-ng
 npm i
 npm run electron
 ```
+Then, if you want to compile the Electron project into an executable file on your OS :
+```bash
+./node_modules/.bin/electron-builder
+```
 __Back-end:__   
 Install [Python 3.6](https://www.python.org/), then the packages in [requirements.txt](python-server/requirements.txt), then run the server:
 ```bash
@@ -173,4 +178,8 @@ sudo apt-get install pyhton3-pip
 cd python-server
 pip3 install -r requirements.txt
 python3 server.py
+```
+And to compile it :
+```bash
+pyinstaller --onefile --windowed server.spec
 ```

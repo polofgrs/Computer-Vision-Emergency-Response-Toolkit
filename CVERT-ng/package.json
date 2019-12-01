@@ -1,6 +1,12 @@
 {
   "name": "cvert-ng",
+  "description": "Computer Vision Emergency Toolkit",
+  "homepage": "http://cver.hrail.crasar.org/",
   "version": "0.0.0",
+  "author": {
+    "name": "Paul Faugeras",
+    "email": "polofgrs@gmail.com"
+  },
   "main": "electron/dist/main.js",
   "scripts": {
     "ng": "ng",
@@ -51,6 +57,7 @@
     "@types/webgl2": "0.0.5",
     "codelyzer": "^5.0.1",
     "electron": "^7.1.1",
+    "electron-builder": "^21.2.0",
     "jasmine-core": "~3.5.0",
     "jasmine-spec-reporter": "~4.2.1",
     "karma": "~4.4.1",
@@ -62,5 +69,40 @@
     "ts-node": "~8.4.1",
     "tslint": "~5.20.1",
     "typescript": "~3.5.3"
+  },
+  "build": {
+    "appId": "CVERT",
+    "files": [
+      "**/*",
+      "dist/**/*"
+    ],
+    "directories": {
+      "output": "releases",
+      "buildResources": "dist"
+    },
+    "dmg": {
+      "iconSize": 100,
+      "contents": [
+        {
+          "x": 50,
+          "y": 240
+        },
+        {
+          "x": 400,
+          "y": 240,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ]
+    },
+    "win": {
+      "target": "nsis"
+    }
   }
 }
