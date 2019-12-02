@@ -76,6 +76,15 @@
       "**/*",
       "dist/**/*"
     ],
+    "extraResources": [
+      {
+        "from": "./../python-server/dist/",
+        "to": "serverExecutables",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
     "directories": {
       "output": "releases",
       "buildResources": "dist"

@@ -28,104 +28,58 @@ I am IN LOVE with a particular HTML / CSS / Javascript (Typescript) framework, [
 I decided to use the following architecture for my software :
 
 ```
-                     cvert.exe
-            +-------------------------+
-            |        FRONT-END        |
-            |       Angular app       |
-            |        (Electron)       |
-            +-------------------------+
-            |      User Interface     |
-            | +---------------------+ |
-            | |Category 1|Category 2| |
-            | |          |          | |
-            | |          |   HTML   | |
-            | |   JIMP   |  canvas  | |
-            | |          |processing| |
-            | |          |          | |
-            | +---------------------+ |
-            +-------------------------+
-            |        Category 3       |
-            |                         |
-            |     HTTP Connexion      |
-            +-------+--------+--------+
-                    |        ^
-                    |        |
-Processing request: |        | Algorithm results:
-* source image,     |        | * result image,
-* algorithm,        |        | * time,
-* parameters        |        | * percentage
-                    |        |
-                    v        |
-             +------+--------+-------+
-             |   BACK-END (optional) |
-             |     Python server     |
-             |     HTTP connexion    |
-             +-----------------------+
-             |Algorithm 1|Algorithm 2|
-             +-----------------------+
-             |Algorithm 3|Algorithm 4|
-             +-----------------------+
-                     server.exe
+                  SINGLE executable file
++------------------------------------------------------+
+|              +-------------------------+             |
+|              |        FRONT-END        |             |
+|              |       Angular app       |             |
+|              |        (Electron)       |             |
+|              +-------------------------+             |
+|              |      User Interface     |             |
+|              | +---------------------+ |             |
+|              | |Category 1|Category 2| |             |
+|              | |          |          | |             |
+|              | |          |   HTML   | |             |
+|              | |   JIMP   |  canvas  | |             |
+|              | |          |processing| |             |
+|              | |          |          | |             |
+|              | +---------------------+ |             |
+|              +-------------------------+             |
+|              |        Category 3       |             |
+|              |                         |             |
+|              |     HTTP Connexion      |==========++ |
+|              +-------+--------+--------+          || |
+|                      |        ^                   || |
++----------------------|--------|-------------------||-+
+|  Processing request: |        | Algorithm results:|| |
+|  * source image,     |        | * result image,   || |
+|  * algorithm,        |        | * time,           || |
+|  * parameters        |        | * percentage      || |
++----------------------|--------|-------------------||-+
+|                      v        |                   || |
+|               +------+--------+-------+           || |
+|               |        BACK-END       |<==========++ |
+|               |     Python server     |   launched   |
+|               |     HTTP connexion    |   through    |
+|               +-----------------------+  subprocess  |
+|               |Algorithm 1|Algorithm 2|              |
+|               +-----------------------+              |
+|               |Algorithm 3|Algorithm 4|              |
+|               +-----------------------+              |
++------------------------------------------------------+
 ```
 * __Front-end__ : Angular App (compiled into a single executable using [Electron](https://electronjs.org/) & [Electron-builder](https://www.electron.build/)),
 * __Back-end__ : Python server (compiled into a single executable using [PyInstaller](https://www.pyinstaller.org/)).
 
-You Need to download and launch the two executables individually :
-* `cvert.exe` for the main software GUI (Electron Angular GUI),
-* `server.exe` for the advanced filters (PyInstaller Python server)
+__NO FRAMEWORK INSTALLATION IS NECESSARY !__   
+__THE WHOLE APP RESIDES IN A SINGLE EXECUTABLE FILE !__
 
-__NO FRAMEWORK INSTALLATION IS NECESSARY !__
 
-Indeed, Electron and PyInstaller compile All of the necessary libraries into a single-file executable, so the user doesn't have to install any framework.
+Indeed, PyInstaller compiles the server into a single executable file (platform-specific), then that executable is compiled into the Electron app with the ExtraResources directory.
 
-*Also, the Python server back-end is only necessary if you want to use the category 3 algorithms. For fairly simple image processing, the front-end can handle it using [Jimp](https://www.npmjs.com/package/jimp).*
+That will enable me to reuse all of the [original CVERT Python algorithms](https://github.com/cvertdev/Computer-Vision-Emergency-Response-Toolkit/tree/master/Computer%20Vision%20Toolkit/Computer%20Vision%20Toolkit/lib/Algorithms), but also simplify the process of [adding a new algorithm](https://github.com/cvertdev/Computer-Vision-Emergency-Response-Toolkit/wiki/Adding-a-New-Algorithm) by simply adding the Python file, and linking it to the front end. The rest will be handled during compilation.
 
-That will enable me to reuse all of the [original CVERT Python algorithms](https://github.com/cvertdev/Computer-Vision-Emergency-Response-Toolkit/tree/master/Computer%20Vision%20Toolkit/Computer%20Vision%20Toolkit/lib/Algorithms), but also simplify the process of [adding a new algorithm](https://github.com/cvertdev/Computer-Vision-Emergency-Response-Toolkit/wiki/Adding-a-New-Algorithm) by simply adding the Python file, and linking it to the front end.
-
-#### In the future
-I plan on compiling the server executable __INSIDE__ the front-end executable, so the front-end can launch the server on its own in a sub-process, and the user doesn't have to launch two programs:
-
-```
-                              +-------------------------+
-                              |        FRONT-END        |
-                              |       Angular app       |
-                              |        (Electron)       |
-                              +-------------------------+
-                              |      User Interface     |
-                              | +---------------------+ |
-                              | |Category 1|Category 2| |
-                              | |          |          | |
-                              | |          |   HTML   | |
-                              | |   JIMP   |  canvas  | |
-                              | |          |processing| |
-                              | |          |          | |
-                              | +---------------------+ |
-                              +-------------------------+
-                              |        Category 3       |
-                              |                         |
-                              |      TCP Connexion      |
-            +=================+-------+--------+--------+
-            ||                        |        ^
-START :     ||                        |        |
-launches    ||    Processing request: |        | Algorithm results:
-subprocess  ||    * source image,     |Zerorpc?| * result image,
-on startup  ||    * algorithm,        |        | * time,
-            ||    * parameters        |        | * percentage
-            ||                        |        |
-            ||                        v        |
-            +================> +------+--------+-------+
-                               |   BACK-END (optional) |
-                               |     Python server     |
-                               |     TCP connexion     |
-                               +-----------------------+
-                               |Algorithm 1|Algorithm 2|
-                               +-----------------------+
-                               |Algorithm 3|Algorithm 4|
-                               +-----------------------+  
-```
-In this case, First, the server can be compiled into a `server.exe`, then this one can be compiled and started from node as an asset. All the code, with its assets can be compiled into the `cvert.exe` executable via Electron-builder, just like in [this example](https://medium.com/@abulka/electron-python-4e8c807bfa5e).
-
-__This way, the user will only need to launch a single executable files, with all dependencies included !__
+This way, the final user doesn't have to install ANYTHING, just launch the executable file. (He can also install the software just like any other software, through an installer, then find it later on, on his OS).
 
 ### Used libraries and packages
 __Front-end:__   
@@ -159,7 +113,7 @@ And the following prod libraries:
 ## For developers :
 __NOTE:__ *I am a Linux user. You might need to look around for equivalent Windows or Mac commands and installation processes...*
 
-__Front-end:__   
+### Front-end
 Install __NodeJS__ (that will automatically install __npm__), and [Angular](https://angular.io/guide/setup-local). Then:
 ```bash
 git clone https://github.com/polofgrs/Computer-Vision-Emergency-Response-Toolkit.git
@@ -171,8 +125,8 @@ Then, if you want to compile the Electron project into an executable file on you
 ```bash
 ./node_modules/.bin/electron-builder
 ```
-__Back-end:__   
-Install [Python 3.6](https://www.python.org/), then the packages in [requirements.txt](python-server/requirements.txt), then run the server:
+### Back-end
+Install [Python 3.6](https://www.python.org/), then the packages in [requirements.txt](python-server/requirements.txt) with `pip3`, then run the server:
 ```bash
 sudo apt-get install pyhton3-pip
 cd python-server
@@ -183,3 +137,9 @@ And to compile it :
 ```bash
 pyinstaller --onefile --windowed server.spec
 ```
+### Additional notes for developers
+* __NOTE 1:__ *You HAVE to run `npm run electron` before running electron-builder, otherwise you will not have the updated files in `/dist`.*
+
+* __NOTE 2:__ *In case you want to compile the electron-builder app, you HAVE to have the compiled executable server files in `/python-server/dist/` (by running PyInstaller) for the OS you are developing on/for.*
+
+* __NOTE 3:__ *In case you are developing a Python function and would like to try it out without using `npm run electron` for the front-end, you can still launch the front-end compiled app, and set up the server to communicate with your local python development server on an other port (bottom left panel). The other server (default port 5000) will still be running, but should not cause any trouble. (just make sure to change your server port in `server.py`, and to launch it manually).*

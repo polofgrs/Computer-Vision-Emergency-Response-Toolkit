@@ -5,6 +5,7 @@ import * as fs from 'fs';
 
 import * as exifr from 'exifr';
 var parser = require('fast-xml-parser');
+var child_process = require('child_process');
 
 let win: BrowserWindow;
 
@@ -38,6 +39,59 @@ function createWindow() {
   win.on('closed', () => {
     win = null;
   });
+
+  launchPythonServer();
+}
+
+function launchPythonServer() {
+  if (__dirname.includes('tmp')) { // Electron-compiled app
+    var platform = process.platform;
+    console.log('Launching server executable on platform ' + platform);
+    var executablePath = getExecutablePath();
+    if (executablePath != '') {
+      try {
+      var pythonServer = child_process.execFile(executablePath);
+      } catch(error) {
+        console.log(error);
+      }
+    }
+  } else { // uncompiled app : launch  python file
+    var pythonPath = getPythonPath();
+    console.log('Launching Python server from py file');
+    try {
+      var pythonServer = child_process.spawn('python3', [pythonPath]);
+    } catch(error) {
+      console.log(error);
+    }
+  }
+
+  if (pythonServer == null) {
+    console.log('failed to launch server');
+  }
+}
+
+// get executable file path for execution, depending on OS
+function getExecutablePath() {
+  var executablePath = '';
+  switch(process.platform) {
+    case 'win32':
+      executablePath = path.join(process.resourcesPath, 'serverExecutables', 'server.exe');
+      break;
+    case 'linux':
+      executablePath = path.join(process.resourcesPath, 'serverExecutables', 'server');
+      break;
+    case 'darwin':
+      executablePath = path.join(process.resourcesPath, 'serverExecutables', 'server'); // need to find extension
+      break;
+    default:
+      break;
+  }
+  return executablePath;
+}
+
+// get Python file path for execution
+function getPythonPath() {
+  return path.join(__dirname, '../../../python-server/server.py');
 }
 
 // IPC functions
