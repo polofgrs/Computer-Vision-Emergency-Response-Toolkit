@@ -2,3 +2,11 @@
 python-server/__pycache__
 python-server/build
 python-server/dist
+
+# latex files
+*.aux
+*.log
+*.synctex.gz
+*.toc
+*.dvi
+*.ps

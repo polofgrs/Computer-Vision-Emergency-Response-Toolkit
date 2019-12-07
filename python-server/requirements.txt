@@ -14,3 +14,5 @@ beautifulsoup4
 
 flask
 flask_cors
+
+pyinstaller
