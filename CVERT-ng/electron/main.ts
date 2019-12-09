@@ -44,7 +44,7 @@ function createWindow() {
 }
 
 function launchPythonServer() {
-  if (__dirname.includes('tmp')) { // Electron-compiled app NEEDS TO BE CHANGED !
+  if (__dirname.includes('asar')) { // Electron-compiled app
     var platform = process.platform;
     console.log('Launching server executable on platform ' + platform);
     var executablePath = getExecutablePath();
