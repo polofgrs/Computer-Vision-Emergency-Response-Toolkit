@@ -1,17 +1,31 @@
 # -*- mode: python ; coding: utf-8 -*-
+import os
 
 block_cipher = None
 
+############## Add your files here #############
+
+imports = [
+    "Algorithms.DXDetector",
+    "Algorithms.RXDetector",
+    "Algorithms.AODNet"
+]
+
+extraFiles = [
+    "pretrained_aod_net_numpy.npy"
+]
+
+##############################################
+
+dataFiles = []
+for file in extraFiles:
+    dataFiles.append((os.path.join('Algorithms', file), 'Algorithms'))
 
 a = Analysis(['server.py'],
-             pathex=['/home/paul/Documents/code/Computer-Vision-Emergency-Response-Toolkit/python-server'],
+             pathex=[os.getcwd()],
              binaries=[],
-             datas=[('Algorithms/pretrained_aod_net_numpy.npy', 'Algorithms')],
-             hiddenimports=[
-              "Algorithms.DXDetector",
-              "Algorithms.RXDetector",
-              "Algorithms.AODNet"
-             ],
+             datas=dataFiles,
+             hiddenimports=imports,
              hookspath=[],
              runtime_hooks=[],
              excludes=[],
@@ -34,4 +48,4 @@ exe = EXE(pyz,
           upx=True,
           upx_exclude=[],
           runtime_tmpdir=None,
-          console=False )
+          console=True )
