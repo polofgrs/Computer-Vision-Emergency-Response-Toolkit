@@ -1,5 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
+import * as path from 'path';
+
 import { ImageInstance } from '../../classes/imageInstance';
 import { Filter } from '../../classes/filter';
 
@@ -69,8 +71,8 @@ export class ActionTabComponent implements OnInit {
       if (dirPath !== '') {
         console.log(dirPath);
         this.outputDir = dirPath;
-        var dirSplit = dirPath.split('/');
-        this.outputLabel = 'Out: ' + dirSplit[dirSplit.length - 1];
+        var dirSplit = path.parse(dirPath);
+        this.outputLabel = 'Out: ' + dirSplit.name;
       } else {
         console.log('no output folder selected');
       }
@@ -83,10 +85,9 @@ export class ActionTabComponent implements OnInit {
       await image.update(filePath, this.gisService);
       await image.applyFilterList(this.filtersList, this.serverService).then(async (result) => {
         await image.update(result, image.gisService).then(async (res) => {
-          var pathSplit = filePath.split('/');
-          pathSplit = pathSplit[pathSplit.length - 1].split('.');
-          var name = pathSplit[pathSplit.length - 2] + '-mod.' + pathSplit[pathSplit.length - 1];
-          var imagePath = this.outputDir + '/' + name;
+          var pathSplit = path.parse(filePath);
+          var name = pathSplit.name + '-mod' + pathSplit.ext;
+          var imagePath = path.join(this.outputDir, name);
           console.log(imagePath);
           await this.fileService.saveImageToPath(image, imagePath);
         });

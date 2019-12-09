@@ -44,7 +44,7 @@ function createWindow() {
 }
 
 function launchPythonServer() {
-  if (__dirname.includes('tmp')) { // Electron-compiled app
+  if (__dirname.includes('tmp')) { // Electron-compiled app NEEDS TO BE CHANGED !
     var platform = process.platform;
     console.log('Launching server executable on platform ' + platform);
     var executablePath = getExecutablePath();
@@ -58,8 +58,19 @@ function launchPythonServer() {
   } else { // uncompiled app : launch  python file
     var pythonPath = getPythonPath();
     console.log('Launching Python server from py file');
+    switch(process.platform) {
+      case 'linux':
+        var python = 'python3';
+        break;
+      case 'win32':
+        var python = 'python';
+        break;
+      default:
+        console.log('unsupported OS');
+        break;
+    }
     try {
-      var pythonServer = child_process.spawn('python3', [pythonPath]);
+      var pythonServer = child_process.spawn(python, [pythonPath]);
     } catch(error) {
       console.log(error);
     }
@@ -80,9 +91,9 @@ function getExecutablePath() {
     case 'linux':
       executablePath = path.join(process.resourcesPath, 'serverExecutables', 'server');
       break;
-    case 'darwin':
+    /*case 'darwin':
       executablePath = path.join(process.resourcesPath, 'serverExecutables', 'server'); // need to find extension
-      break;
+      break;*/
     default:
       break;
   }
