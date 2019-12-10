@@ -8,6 +8,9 @@ var parser = require('fast-xml-parser');
 var child_process = require('child_process');
 
 let win: BrowserWindow;
+let paramWin: BrowserWindow;
+
+let algorithmParameters: any;
 
 app.on('ready', createWindow);
 
@@ -34,17 +37,22 @@ function createWindow() {
     })
   );
   win.maximize();
-  win.webContents.openDevTools(); // to hide in prod
+  // win.webContents.openDevTools(); // to hide in prod
   Menu.setApplicationMenu(null);
   win.on('closed', () => {
     win = null;
   });
 
+  readAlgorithmParameters();
   launchPythonServer();
 }
 
+function isCompiled() {
+  return (__dirname.includes('asar'));
+}
+
 function launchPythonServer() {
-  if (__dirname.includes('asar')) { // Electron-compiled app
+  if (isCompiled()) { // Electron-compiled app
     var platform = process.platform;
     console.log('Launching server executable on platform ' + platform);
     var executablePath = getExecutablePath();
@@ -105,12 +113,24 @@ function getPythonPath() {
   return path.join(__dirname, '../../../python-server/server.py');
 }
 
+function readAlgorithmParameters() {
+  algorithmParameters = JSON.parse(fs.readFileSync(getAssetsPath()).toString()).algorithmParameters;
+}
+
+function getAssetsPath() {
+  if (isCompiled()) {
+    return path.join(process.resourcesPath, 'assets', 'algorithmParameters.json');
+  } else {
+    return path.join(__dirname, `/../../dist/CVERT-ng/assets/algorithmParameters.json`);
+  }
+}
+
 // IPC functions
 
 //parameters window
 ipcMain.on('openAlgorithmParametersWindow', (event) => {
 
-  const win = new BrowserWindow({
+  paramWin = new BrowserWindow({
     width: 900,
     height: 600,
     center: true,
@@ -128,28 +148,23 @@ ipcMain.on('openAlgorithmParametersWindow', (event) => {
         slashes: true,
       })
   urlToNav = urlToNav + '#/parameters';
-  win.loadURL(urlToNav);
-  win.webContents.openDevTools(); // to hide in prod
-  win.removeMenu();
+  paramWin.loadURL(urlToNav);
+  // paramWin.webContents.openDevTools(); // to hide in prod
+  paramWin.removeMenu();
+})
+
+ipcMain.on('readAlgorithmParameters', (event, window) => {
+  if (window == 'win') {
+    win.webContents.send('readAlgorithmParametersResponse', algorithmParameters);
+  } else if (window == 'paramWin') {
+    paramWin.webContents.send('readAlgorithmParametersResponse', algorithmParameters);
+  }
 })
 
 //save algorithm parameters to assets.json
-ipcMain.on('saveAlgorithmParameters', (event, algorithmParameters) => {
-  // console.log(algorithmParameters);
-  var assetsPath = url.format({
-    pathname: path.join(__dirname, `/../../dist/CVERT-ng/assets/assets.json`),
-    slashes: true,
-  })
-  var assets = JSON.parse(fs.readFileSync(assetsPath).toString());
-  // console.log(assets);
-  assets.algorithmParameters = algorithmParameters;
-  fs.writeFile(assetsPath, JSON.stringify(assets), (err) => {
-    if (err) {
-      console.error(err);
-    } else {
-      console.log('Saved Algorithm Parameters');
-    }
-  });
+ipcMain.on('saveAlgorithmParameters', (event, newAlgorithmParameters) => {
+  algorithmParameters = newAlgorithmParameters;
+  console.log('Saved Algorithm Parameters');
 })
 
 //file save

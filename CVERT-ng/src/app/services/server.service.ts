@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { GisData } from '../classes/gisData';
+import { FileService } from '../services/file.service';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +12,8 @@ export class ServerService {
   ip: string;
   port: string;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient,
+              private fileService: FileService) {
     this.reset();
   }
 
@@ -20,26 +22,27 @@ export class ServerService {
     this.port = '5000';
   }
 
-  getAssets() {
-    this.http.get('assets/assets.json').subscribe(jsonParam => {
+  /*getAssets() {
+    this.fileService.getAlgorithmParameters().then((jsonParam) => {
       console.log(jsonParam);
     });
-  }
+  }*/
 
   send(algorithm: any,
         sourcePath: string,
         targetPath: string) : Promise<any> {
     var that = this;
     return new Promise(function(resolve, reject) {
-      that.http.get('assets/assets.json').subscribe(jsonParam => {
-        let jsonData = that.getJsonFromParam(algorithm, sourcePath, targetPath, jsonParam['algorithmParameters']);
+      that.fileService.getAlgorithmParameters('win').then((jsonParam) => {
+        // console.log(jsonParam);
+        let jsonData = that.getJsonFromParam(algorithm, sourcePath, targetPath, jsonParam);
         let httpHeaders = new HttpHeaders({
           'Content-Type' : 'application/json'
     	  });
         let url = 'http://' + that.ip + ':' + that.port;
         that.http.post<any>(url, jsonData, {headers: httpHeaders})
         .subscribe((data) => {
-          console.log(data);
+          // console.log(data);
           resolve(data);
         })
       });
@@ -60,18 +63,16 @@ export class ServerService {
     };
     var that = this;
     return new Promise(function(resolve, reject) {
-      that.http.get('assets/assets.json').subscribe(jsonParam => {
-        let httpHeaders = new HttpHeaders({
-          'Content-Type' : 'application/json'
-    	  });
-        let url = 'http://' + that.ip + ':' + that.port;
-        that.http.post<any>(url, jsonData, {headers: httpHeaders})
-        .subscribe((data) => {
-          console.log(data);
-          resolve(data);
-        })
-      });
-    })
+      let httpHeaders = new HttpHeaders({
+        'Content-Type' : 'application/json'
+  	  });
+      let url = 'http://' + that.ip + ':' + that.port;
+      that.http.post<any>(url, jsonData, {headers: httpHeaders})
+      .subscribe((data) => {
+        // console.log(data);
+        resolve(data);
+      })
+    });
   }
 
   getJsonFromParam(algorithm: any,

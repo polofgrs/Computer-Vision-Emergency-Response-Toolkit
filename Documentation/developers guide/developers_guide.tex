@@ -85,13 +85,13 @@ It takes as arguments a sourcePath (a list of image paths), a target path (a des
 ~\\
 Then, using XMP-exif data extraction in the source files, then vectorial computation, it finds all the images of which the field of view intersects with the GPS target point. If suc a point is found, it draws a red circle at its location on the image, and saves the image in the destination folder.\\
 ~\\
-If no intersection is found, or if the XP-exif data cannot be extracted from the image, it is simply ignored.
+If no intersection is found, or if the XMP-exif data cannot be extracted from the image, it is simply ignored.
 
 \section{Developing}
 \subsection{Install and manual run}
 First, you need to install Python 3.6 or higher on your computer.\\
 ~\\
-\texttt{pip3} is normally installed with Python3. So all you need to do is install the required libraries by running the following command, in the python-server directory :\\
+\texttt{pip3} is normally installed with Python3 (otherwise, you can install it manually). After that, all you need to do is install the required libraries by running the following command, in the python-server directory :\\
 ~\\
 \texttt{pip3 install -r requirements.txt}\\
 ~\\
@@ -124,9 +124,7 @@ def myAlgorithm(cv2_image, parameters):
 ~\\
 If you need a specfic package for your algorithm (above, for example, \texttt{package1}), add a line in \texttt{requirements.txt}, so that the next user to download the git repo will know what to install.\\
 ~\\
-Now, we need to update \texttt{CVERT-ng/src/app/assets/assets.json} in two places :\\
-~\\
-First, in the \texttt{serverFilters} list : you need to add (1) the name that will be displayed on the front end, (2) the name of the library/module, (3) the name of the main Python function within the module, (4) the arguments( here, leave it as is).For the above example (please note the file name), you will add the following element :\\
+Now, we need to update \texttt{CVERT-ng/src/app/assets/assets.json} in the \texttt{serverFilters} list : you need to add (1) the name that will be displayed on the front end, (2) the name of the library/module, (3) the name of the main Python function within the module, (4) the arguments (here, leave it as is).For the above example (please note the file name), you will add the following element :\\
 
 \begin{lstlisting}
 {
@@ -138,7 +136,7 @@ First, in the \texttt{serverFilters} list : you need to add (1) the name that wi
 \end{lstlisting}
 
 ~\\
-Then, still in \texttt{Assets.json}, if you need a custom parameter (in the above, \texttt{myParameterKey}, that we'd like to set at default value 8, for example), we should add it to the \texttt{algorithmParameters} array for the Angular app to prompt the user when he tunes the server parameters. For that, we need to set (1) the parameter name, (2) its default value. Leave the other fields as they are, they are used by the front end :\\
+Then, in \texttt{CVERT-ng/src/app/assets/algorithmParameters.json}, if you need a custom parameter (in the above, \texttt{myParameterKey}, that we'd like to set at default value 8, for example), we should add it to the \texttt{algorithmParameters} array for the Angular app to prompt the user when he tunes the server parameters. For that, we need to set (1) the parameter name, (2) its default value. Leave the other fields as they are, they are used by the front end :\\
 
 \begin{lstlisting}
 {
@@ -150,14 +148,24 @@ Then, still in \texttt{Assets.json}, if you need a custom parameter (in the abov
 \end{lstlisting}
 
 ~\\
-Finally, If your algorithm needs a specific file during its runtime (for example, the AODnet algorithm needs the pretrained network (.npy) file located in the \texttt{Algorithm} directory, then we will need to tell the compiler (PyInstaller) to include it in the assets for the software to find it when running after compilation. For that, we will need to add it in the \texttt{server.spec} file, in the \texttt{datas} list like so :\\
+Finally, in order for the compiler (PyInstaller) to find your algorithm, and include its assets if your algorithm needs a specific file during its runtime (for example, the AODnet algorithm needs the pretrained network (.npy) file located in the \texttt{Algorithm} directory. For that, we will need to add the algorithm and the asset in the \texttt{server.spec} file, like so :\\
 
 \begin{lstlisting}[language=Python]
-datas=[('Algorithms/pretrained_aod_net_numpy.npy', 'Algorithms'),
-	('Algorithms/your_resource_file.whatever', 'Algorithms')],
-\end{lstlisting}
+imports = [
+    "Algorithms.DXDetector",
+    "Algorithms.RXDetector",
+    "Algorithms.AODNet",
+    "Algorithms.newAlgorithm"
+]
 
+extraFiles = [
+    "pretrained_aod_net_numpy.npy",
+    "your_resource_file.whatever"
+]
+\end{lstlisting}
 ~\\
+(Make sure that your resource file is in the Algorithm directory : that's where the spec file will look for it...)\\
+
 Now you should see your algorithm and settings appear in the software after compiling, yipee! :)
 
 \pagebreak
@@ -256,7 +264,7 @@ Once you have installed Python 3.6 and the required libraries (see above), once 
 ~\\
 Navigate to the \texttt{python-server} directory, and run the following command :\\
 ~\\
-\texttt{pyinstaller -{}-onefile -{}-windowed server.spec}\\
+\texttt{pyinstaller server.spec}\\
 ~\\
 That should create two directories : \texttt{build} and \texttt{dist}. Your executable file will be in \texttt{dist}. You can try it out by double-clicking on it, but be careful : since it doesn't have any window, you will not be able to close it (you might have to stop it through the task manager...).\\
 ~\\

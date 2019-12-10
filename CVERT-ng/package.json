@@ -84,6 +84,13 @@
         "filter": [
           "**/*"
         ]
+      },
+      {
+        "from": "./src/assets/algorithmParameters.json",
+        "to": "assets/algorithmParameters.json",
+        "filter": [
+          "**/*"
+        ]
       }
     ],
     "directories": {
@@ -107,8 +114,7 @@
     },
     "linux": {
       "target": [
-        "AppImage",
-        "deb"
+        "AppImage"
       ]
     },
     "win": {

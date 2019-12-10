@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 
-import * as assets from '../../../assets/assets.json';
 import { FileService } from '../../services/file.service';
 
 @Component({
@@ -13,10 +12,13 @@ export class AlgorithmParametersEditComponent implements OnInit {
   algorithmParameters: any;
 
   constructor(private fileService: FileService) {
-    this.algorithmParameters = assets.algorithmParameters;
+    // this.algorithmParameters = assets.algorithmParameters;
   }
 
   ngOnInit() {
+    this.fileService.getAlgorithmParameters('paramWin').then((parameters) => {
+      this.algorithmParameters = parameters;
+    });
   }
 
   saveParameters() {

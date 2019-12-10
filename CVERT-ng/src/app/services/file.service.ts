@@ -54,6 +54,15 @@ export class FileService {
     })
   }
 
+  getAlgorithmParameters(window: string) {
+    return new Promise<string[]>((resolve, reject) => {
+      this.ipc.once('readAlgorithmParametersResponse', (event, algorithmParameters) => {
+        resolve(algorithmParameters);
+      });
+      this.ipc.send('readAlgorithmParameters', window);
+    })
+  }
+
   openParameters() {
     this.ipc.send('openAlgorithmParametersWindow');
   }
