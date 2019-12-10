@@ -2,8 +2,8 @@
 
 Please visit [the contest website](https://computervisionrescue.wixsite.com/contest) for more information.
 
-__IMPORTANT NOTE:__   
-This readme is in progress. Most of the information below is a general idea of what I'd like to do, and the present code and development process might not work. I will update this readme as frequently as possible.
+* [User's Manual](Documentation/users%20manual/users_manual.pdf),
+* [Developer's guide](Documentation/developers%20guide/developers_guide.pdf).
 
 ## Introduction
 I basically first thought that C# code from [the initial repository](https://github.com/cvertdev/Computer-Vision-Emergency-Response-Toolkit) was not a great idea, for the following reasons :
@@ -135,7 +135,7 @@ python3 server.py
 ```
 And to compile it :
 ```bash
-pyinstaller --onefile --windowed server.spec
+pyinstaller server.spec
 ```
 ### Additional notes for developers
 * __NOTE 1:__ *You HAVE to run `npm run electron` before running electron-builder, otherwise you will not have the updated files in `/dist`.*
