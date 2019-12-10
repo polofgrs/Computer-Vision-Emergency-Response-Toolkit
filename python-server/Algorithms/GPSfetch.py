@@ -1,5 +1,5 @@
 import timer
-from libxmp import XMPFiles
+from exif import Image
 import bs4
 import cv2
 import math
@@ -27,21 +27,29 @@ def GpsFetch(sourcePath, targetPath, gpsTarget):
 
 def getXMP(path):
     # extracts XMP data from picture
-    # if no XMP data is found, returns None
-    xmpfile = XMPFiles(file_path=path, open_forupdate=True)
-    xmp = xmpfile.get_xmp()
-    soup = bs4.BeautifulSoup(str(xmp), 'html.parser')
-    xdimension = int(soup.find('exif:pixelxdimension').string)
-    ydimension = int(soup.find('exif:pixelydimension').string)
+    fd = open(path, 'rb')
+    # exif
+    image = Image(fd)
+    if image.has_exif:
+        xdimension = image.pixel_x_dimension
+        ydimension = image.pixel_y_dimension
+    # XMP
+    fd = open(path, 'rb')
+    d = fd.read()
+    xmp_start = d.find(b'<x:xmpmeta')
+    xmp_end = d.find(b'</x:xmpmeta')
+    xmp_str = d[xmp_start:xmp_end + 12]
+    soup = bs4.BeautifulSoup(xmp_str.decode(), 'html.parser')
+    rdf = soup.find('rdf:description')
     try:
-        altitude = float(soup.find('drone-dji:relativealtitude').string)
-        latitude = float(soup.find('drone-dji:gpslatitude').string)
-        heading = float(soup.find('drone-dji:gimbalyawdegree').string)
-        pitch = float(soup.find('drone-dji:gimbalpitchdegree').string)
+        altitude = float(rdf['drone-dji:relativealtitude'])
+        latitude = float(rdf['drone-dji:gpslatitude'])
+        heading = float(rdf['drone-dji:gimbalyawdegree'])
+        pitch = float(rdf['drone-dji:gimbalpitchdegree'])
         try:  # thank you DJI for the typo...
-            longitude = float(soup.find('drone-dji:gpslongitude').string)
+            longitude = float(rdf['drone-dji:gpslongitude'])
         except Exception:
-            longitude = float(soup.find('drone-dji:gpslongtitude').string)
+            longitude = float(rdf['drone-dji:gpslongtitude'])
         print("XMP found for " + path)
         resultDict = {
             "xdimension": xdimension,
@@ -52,6 +60,7 @@ def getXMP(path):
             "heading": heading,
             "pitch": pitch
         }
+        print(resultDict)
         return resultDict
     except AttributeError as e:
         print(e)

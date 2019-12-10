@@ -9,7 +9,7 @@ scikit-learn
 spectral
 argparse
 matplotlib
-python-xmp-toolkit
+exif
 beautifulsoup4
 
 flask

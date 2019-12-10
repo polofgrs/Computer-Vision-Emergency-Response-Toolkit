@@ -44,7 +44,7 @@ function createWindow() {
   });
 
   readAlgorithmParameters();
-  launchPythonServer();
+  // launchPythonServer();
 }
 
 function isCompiled() {
