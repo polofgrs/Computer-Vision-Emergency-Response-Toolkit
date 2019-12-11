@@ -269,7 +269,9 @@ Navigate to the \texttt{python-server} directory, and run the following command 
 ~\\
 That should create two directories : \texttt{build} and \texttt{dist}. Your executable file will be in \texttt{dist}. You can try it out by double-clicking on it, but be careful : since it doesn't have any window, you will not be able to close it (you might have to stop it through the task manager...). You can also launch it through a terminal : you will be able to get the Python output and debug your executable file.\\
 ~\\
-Do not move the resulting file : it needs to stayy in the dist folder in order for Electron-builder to find it and include it in the final app.
+Do not move the resulting file : it needs to stayy in the dist folder in order for Electron-builder to find it and include it in the final app.\\
+~\\
+\textit{NOTE : If, when compiling with pyinstaller, you get an error like} \texttt{AttributeError: module 'enum' has no attribute 'IntFlag'}, \textit{then uninstall the package} \texttt{enum34}\textit{, that causes the error :} \texttt{pip3 uninstall -y enum34}.
 
 \section{Electron-Builder}
 

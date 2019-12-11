@@ -11,6 +11,7 @@ let win: BrowserWindow;
 let paramWin: BrowserWindow;
 
 let algorithmParameters: any;
+let pythonProcess: any;
 
 app.on('ready', createWindow);
 
@@ -39,12 +40,18 @@ function createWindow() {
   win.maximize();
   // win.webContents.openDevTools(); // to hide in prod
   Menu.setApplicationMenu(null);
-  win.on('closed', () => {
-    win = null;
-  });
 
   readAlgorithmParameters();
-  // launchPythonServer();
+  pythonProcess = launchPythonServer();
+
+  win.on('closed', () => {
+    try {
+      pythonProcess.kill('SIGINT');
+    } catch(err) {
+      console.log(err);
+    }
+    win = null;
+  });
 }
 
 function isCompiled() {
@@ -87,6 +94,8 @@ function launchPythonServer() {
   if (pythonServer == null) {
     console.log('failed to launch server');
   }
+
+  return pythonServer;
 }
 
 // get executable file path for execution, depending on OS

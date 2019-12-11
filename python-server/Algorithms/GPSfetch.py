@@ -60,7 +60,6 @@ def getXMP(path):
             "heading": heading,
             "pitch": pitch
         }
-        print(resultDict)
         return resultDict
     except AttributeError as e:
         print(e)
