@@ -1,5 +1,6 @@
 import timer
 from exif import Image
+import os
 import bs4
 import cv2
 import math
@@ -131,8 +132,8 @@ def drawCircle(path, pixels):
 
 def saveImage(image, sourcePath, targetPath):
     # saves image at the specified path (with modified name)
-    pathSplit = sourcePath.split("/")
-    filePath = targetPath + '/intersect-' + pathSplit[len(pathSplit) - 1]
+    pathSplit = os.path.split(sourcePath)
+    filePath = os.path.join(targetPath, 'intersect-' + pathSplit[len(pathSplit) - 1])
     cv2.imwrite(filePath, image)
     return
 
