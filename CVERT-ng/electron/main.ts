@@ -38,7 +38,7 @@ function createWindow() {
     })
   );
   win.maximize();
-  // win.webContents.openDevTools(); // to hide in prod
+  win.webContents.openDevTools(); // to hide in prod
   Menu.setApplicationMenu(null);
 
   readAlgorithmParameters();
@@ -219,7 +219,7 @@ ipcMain.on('getGISdata', (event, path: string) => {
         } catch(err) {
           console.log('no XMP data found');
         }
-        win.webContents.send('getGISdataResponse', xmpData);
+        win.webContents.send('getGISdataResponse', exif, xmpData);
       })
     })
   }
