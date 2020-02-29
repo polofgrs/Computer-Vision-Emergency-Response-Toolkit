@@ -19,10 +19,10 @@
 
     <div class="col-6 full-height" id="center-panel">
       <div class="row" id="top-picture">
-        <app-image-tab [(image)]="topImage" [addOverlay]="false" id="top-image"></app-image-tab>
+        <app-image-tab [(image)]="topImage" [addOverlay]="false" [containerId]="'top-container'" id="top-image"></app-image-tab>
       </div>
       <div class="row" id="bottom-picture">
-        <app-image-tab [(image)]="bottomImage" [addOverlay]="true" id="bottom-image"></app-image-tab>
+        <app-image-tab [(image)]="bottomImage" [addOverlay]="true" [containerId]="'bottom-container'" id="bottom-image"></app-image-tab>
       </div>
     </div>
 

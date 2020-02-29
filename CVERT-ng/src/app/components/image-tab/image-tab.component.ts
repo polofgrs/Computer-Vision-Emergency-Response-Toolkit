@@ -13,6 +13,8 @@ export class ImageTabComponent implements OnInit {
 
   @Input() image: ImageInstance;
   @Input() addOverlay: boolean;
+  @Input() containerId: string;
+
   @ViewChild("img", {static: false}) img: ElementRef;
   @ViewChild("overlayCanvas", {static: false}) overlayCanvas: ElementRef;
 

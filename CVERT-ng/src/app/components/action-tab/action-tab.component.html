@@ -1,19 +1,15 @@
 <div class="col full-height pt-3 full-width">
 
   <div class="row full-width mx-auto open-save">
-    <!--div class="col-6 open-button">
-      <button mat-raised-button color="primary" (click)="fileInput.click()">
-        Open
-      </button>
-      <input hidden #fileInput
-            type="file"
-            id="file"
-            accept="image/*"
-            (change)="openImage($event)" >
-    </div-->
-    <div class="col-12 save-button">
+    <div class="col-6 save-button">
       <button mat-raised-button color="primary" (click)="saveImage()" [disabled]="!bottomImage">
-        Save
+        Save Image
+      </button>
+    </div>
+
+    <div class="col-6 open-button">
+      <button mat-raised-button color="primary" (click)="saveCanvas()" [disabled]="!bottomImage">
+        Save Overlay
       </button>
     </div>
   </div>

@@ -29,6 +29,13 @@ export class FileService {
     });
   }
 
+  async saveCanvas(imageUri: string, mime: string) {
+    return new Promise<string[]>((resolve, reject) => {
+      this.ipc.send("saveFile", imageUri, mime);
+      resolve();
+    });
+  }
+
   async saveImageToPath(image: ImageInstance, path: string) {
     return new Promise<string[]>((resolve, reject) => {
       this.ipc.send("saveFileToPath", image.uri, image.jimpObject._originalMime, path);

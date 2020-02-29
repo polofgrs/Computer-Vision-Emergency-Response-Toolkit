@@ -42,6 +42,7 @@ export class CanvasService implements OnDestroy {
 
     this.renderer = new THREE.WebGLRenderer({
       canvas: this.canvas,
+      preserveDrawingBuffer: true,
       alpha: true,    // transparent background
       antialias: true // smooth edges
     });

@@ -1,4 +1,5 @@
-<div *ngIf="image" #container id="container"> <!--(change)="refreshCanvas()"-->
+<div *ngIf="image" class="container" #container id="{{containerId}}"> <!--(change)="refreshCanvas()"-->
+
   <img #img *ngIf="image.uri"
             [(src)]="image.uri"
             id="img"
@@ -7,4 +8,5 @@
   <canvas *ngIf="this.addOverlay"
           #overlayCanvas
           id="overlayCanvas"></canvas>
+
 </div>

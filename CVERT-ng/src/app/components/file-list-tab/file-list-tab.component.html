@@ -12,7 +12,7 @@
                aria-hidden="false"
                aria-label="color"
                color="{{file.color}}"
-               (click)="onChangeColor(file)">invert_colors</mat-icon>
+               (click)="onChangeColor(file)">label</mat-icon>
       <div class="file-name"
             (click)="openImage(file)">{{getName(file)}}</div>
       <mat-icon *ngIf="file.viewed"

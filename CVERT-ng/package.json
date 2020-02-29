@@ -35,6 +35,7 @@
     "exifr": "^2.1.1",
     "fast-xml-parser": "^3.14.0",
     "hammerjs": "^2.0.8",
+    "html2canvas": "^1.0.0-rc.5",
     "jimp": "^0.8.4",
     "jquery": "^3.4.1",
     "path": "^0.12.7",

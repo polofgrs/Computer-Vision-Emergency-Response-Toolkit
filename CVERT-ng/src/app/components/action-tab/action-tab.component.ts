@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import html2canvas from 'html2canvas';
 
 import * as path from 'path';
 
@@ -36,16 +37,34 @@ export class ActionTabComponent implements OnInit {
 
   ngOnInit() { }
 
-  /*async openImage(event: any) {
-    if(event.target.files && event.target.files.length) {
-      var path = event.target.files[0].path;
-      // console.log(event.target.files[0].path);
-
-    }
-  }*/
-
   saveImage() {
     this.fileService.saveImage(this.bottomImage);
+  }
+
+  saveCanvas() {
+    let image = this.getElementInsideContainer("bottom-container", "img");
+    html2canvas(document.querySelector("#bottom-container")).then(canvas => {
+      let outCanvas = document.createElement('canvas');
+      outCanvas.width = image.width;
+      outCanvas.height = image.height;
+      let ctx = outCanvas.getContext('2d');
+      ctx.drawImage(canvas, (canvas.width - image.width)/2, (canvas.height - image.height)/2, image.width, image.height, 0, 0, image.width, image.height);
+      const mime = "image/png";
+      var img = outCanvas.toDataURL(mime);
+      this.fileService.saveCanvas(img, mime);
+    });
+  }
+
+  getElementInsideContainer(containerID, childID) {
+    var elm;
+    var elms = document.getElementById(containerID).getElementsByTagName("*");
+    for (var i = 0; i < elms.length; i++) {
+        if (elms[i].id === childID) {
+            elm = elms[i];
+            break;
+        }
+    }
+    return elm;
   }
 
   getInputFiles() {
