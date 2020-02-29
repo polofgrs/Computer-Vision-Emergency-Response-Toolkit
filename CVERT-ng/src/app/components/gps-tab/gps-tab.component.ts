@@ -13,8 +13,10 @@ import { GisService } from '../../services/gis.service';
 export class GpsTabComponent implements OnInit {
 
   @Input() gisData: GisData;
+
   altitudeFeet: number;
   metersToFeet = 3.28084; // factor
+  markerDisplayed = true;
 
   // wait for data init for change
   @ViewChild('altitude', {static: false}) set altitude(element) {
@@ -48,6 +50,11 @@ export class GpsTabComponent implements OnInit {
       this.altitudeFeet = this.gisData.altitude * this.metersToFeet;
     }
     this.updateCanvas('altitude');
+  }
+
+  onDisplayToggle(evt: any) {
+    this.canvasService.displayMarker(evt.checked);
+    this.markerDisplayed = evt.checked;
   }
 
   updateCanvas(property: string) {

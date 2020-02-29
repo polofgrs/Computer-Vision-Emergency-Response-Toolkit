@@ -32,7 +32,7 @@ export class GisData {
     this.fov = 94; // P3 diagonal FOV
   }
 
-  serMarkerPos(lat: number, lon: number) {
+  setMarkerPos(lat: number, lon: number) {
     this.markerLat = lat;
     this.markerLon = lon;
   }

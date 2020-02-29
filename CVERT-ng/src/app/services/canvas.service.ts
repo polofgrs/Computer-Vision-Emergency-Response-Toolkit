@@ -82,6 +82,7 @@ export class CanvasService implements OnDestroy {
 		coneGeometry.rotateX( Math.PI / 2 );
     var helperMaterial = new THREE.MeshNormalMaterial();
 		this.helper = new THREE.Mesh( coneGeometry, helperMaterial );
+    this.helper.name = "helper";
     this.helper.rotation.x = - Math.PI / 2;
 		this.scene.add(this.helper);
 
@@ -91,6 +92,7 @@ export class CanvasService implements OnDestroy {
     });
 		this.marker = new THREE.Mesh( coneGeometry, markerMaterial );
     this.marker.rotation.x = - Math.PI / 2;
+    this.marker.name = "marker";
 		this.scene.add(this.marker);
 
     this.canvas.addEventListener( 'mousemove', this.onMouseMove.bind(this), false );
@@ -101,18 +103,30 @@ export class CanvasService implements OnDestroy {
     this.scene.add( this.grid );
   }
 
+  isMarkerPresent(): boolean {
+    return !!this.scene.getObjectByName(this.marker.name);
+  }
+
+  isHelperPresent(): boolean {
+    return !!this.scene.getObjectByName(this.helper.name);
+  }
+
   onMouseMove( event ) {
-    var intersects = this.getIntersect( event );
-		if ( intersects.length > 0 ) {
-			this.helper.position.copy( intersects[ 0 ].point );
-		}
+    if (this.isHelperPresent()) {
+      var intersects = this.getIntersect( event );
+  		if ( intersects.length > 0 ) {
+  			this.helper.position.copy( intersects[ 0 ].point );
+  		}
+    }
   }
 
   onMouseDown( event ) {
-    var intersects = this.getIntersect( event );
-    if ( intersects.length > 0 ) {
-      this.marker.position.copy(intersects[0].point);
-      this.gisService.getGPS(intersects[0].point.x, intersects[0].point.z);
+    if (this.isMarkerPresent()) {
+      var intersects = this.getIntersect( event );
+      if ( intersects.length > 0 ) {
+        this.marker.position.copy(intersects[0].point);
+        this.gisService.getGPS(intersects[0].point.x, intersects[0].point.z);
+      }
     }
   }
 
@@ -196,6 +210,24 @@ export class CanvasService implements OnDestroy {
   getVertFovDeg(diagFovDeg: number, ratio: number) {
     var fov = 2 * Math.atan2(Math.tan(diagFovDeg*Math.PI/180/2), Math.sqrt(1+ratio*ratio));
     return fov*180/Math.PI;
+  }
+
+  displayMarker(toggle: boolean) {
+    if (toggle) {
+      if (!this.isMarkerPresent()) {
+        this.scene.add(this.marker);
+      }
+      if (!this.isHelperPresent()) {
+        this.scene.add(this.helper);
+      }
+    } else {
+      if (this.isMarkerPresent()) {
+        this.scene.remove(this.scene.getObjectByName(this.marker.name));
+      }
+      if (this.isHelperPresent()) {
+        this.scene.remove(this.scene.getObjectByName(this.helper.name));
+      }
+    }
   }
 
   isInit() {
