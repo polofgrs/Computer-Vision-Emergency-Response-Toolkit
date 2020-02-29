@@ -16,7 +16,9 @@ export class GpsTabComponent implements OnInit {
 
   altitudeFeet: number;
   metersToFeet = 3.28084; // factor
+
   markerDisplayed = true;
+  gridDisplayed = true;
 
   // wait for data init for change
   @ViewChild('altitude', {static: false}) set altitude(element) {
@@ -52,8 +54,13 @@ export class GpsTabComponent implements OnInit {
     this.updateCanvas('altitude');
   }
 
-  onDisplayToggle(evt: any) {
-    this.canvasService.displayMarker(evt.checked);
+  onGridDisplayToggle(evt: any) {
+    this.canvasService.displayGrid(evt.checked);
+    this.gridDisplayed = evt.checked;
+  }
+
+  onMarkersDisplayToggle(evt: any) {
+    this.canvasService.displayMarkers(evt.checked);
     this.markerDisplayed = evt.checked;
   }
 

@@ -105,12 +105,21 @@
 
   </form>
 
-  <div class="row full-width center-block">
-    <mat-slide-toggle labelPosition="before"
-                      [checked]="markerDisplayed"
-                      (change)="onDisplayToggle($event)">
-      Marker
-    </mat-slide-toggle>
+  <div class="row full-width">
+    <div class="col-6 center-block">
+      <mat-slide-toggle labelPosition="before"
+                        [checked]="gridDisplayed"
+                        (change)="onGridDisplayToggle($event)">
+      Grid
+      </mat-slide-toggle>
+    </div>
+    <div class="col-6 center-block">
+      <mat-slide-toggle labelPosition="before"
+                        [checked]="markerDisplayed"
+                        (change)="onMarkersDisplayToggle($event)">
+      Markers
+      </mat-slide-toggle>
+    </div>
   </div>
 
   <div *ngIf="markerDisplayed && gisData.markerLat && gisData.markerLon" class="row full-width mx-1">

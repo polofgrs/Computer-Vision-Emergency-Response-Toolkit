@@ -100,19 +100,16 @@ export class CanvasService implements OnDestroy {
 
     // grid helper
     this.grid = new THREE.GridHelper( 1000, 100, 0x000000, 0x888888 );
+    this.grid.name = "grid";
     this.scene.add( this.grid );
   }
 
-  isMarkerPresent(): boolean {
-    return !!this.scene.getObjectByName(this.marker.name);
-  }
-
-  isHelperPresent(): boolean {
-    return !!this.scene.getObjectByName(this.helper.name);
+  isPresent(object: any): boolean {
+    return !!this.scene.getObjectByName(object.name);
   }
 
   onMouseMove( event ) {
-    if (this.isHelperPresent()) {
+    if (this.isPresent(this.helper)) {
       var intersects = this.getIntersect( event );
   		if ( intersects.length > 0 ) {
   			this.helper.position.copy( intersects[ 0 ].point );
@@ -121,7 +118,7 @@ export class CanvasService implements OnDestroy {
   }
 
   onMouseDown( event ) {
-    if (this.isMarkerPresent()) {
+    if (this.isPresent(this.marker)) {
       var intersects = this.getIntersect( event );
       if ( intersects.length > 0 ) {
         this.marker.position.copy(intersects[0].point);
@@ -212,20 +209,23 @@ export class CanvasService implements OnDestroy {
     return fov*180/Math.PI;
   }
 
-  displayMarker(toggle: boolean) {
+  displayGrid(toggle: boolean) {
+    this.toggleInScene(toggle, this.grid);
+  }
+
+  displayMarkers(toggle: boolean) {
+    this.toggleInScene(toggle, this.marker);
+    this.toggleInScene(toggle, this.helper);
+  }
+
+  toggleInScene(toggle: boolean, object: any) {
     if (toggle) {
-      if (!this.isMarkerPresent()) {
-        this.scene.add(this.marker);
-      }
-      if (!this.isHelperPresent()) {
-        this.scene.add(this.helper);
+      if (!this.isPresent(object)) {
+        this.scene.add(object);
       }
     } else {
-      if (this.isMarkerPresent()) {
-        this.scene.remove(this.scene.getObjectByName(this.marker.name));
-      }
-      if (this.isHelperPresent()) {
-        this.scene.remove(this.scene.getObjectByName(this.helper.name));
+      if (this.isPresent(object)) {
+        this.scene.remove(this.scene.getObjectByName(object.name));
       }
     }
   }
