@@ -38,7 +38,7 @@ function createWindow() {
     })
   );
   win.maximize();
-  win.webContents.openDevTools(); // to hide in prod
+  // win.webContents.openDevTools(); // to hide in prod
   Menu.setApplicationMenu(null);
 
   readAlgorithmParameters();
