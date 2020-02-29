@@ -17,6 +17,7 @@ import { ActionTabComponent } from './components/action-tab/action-tab.component
 import { AlgorithmParametersEditComponent } from './components/algorithm-parameters-edit/algorithm-parameters-edit.component';
 import { HomeComponent } from './components/home/home.component';
 import { AlgorithmParameterItemComponent } from './components/algorithm-parameters-edit/algorithm-parameter-item/algorithm-parameter-item.component';
+import { FileListTabComponent } from './components/file-list-tab/file-list-tab.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { AlgorithmParameterItemComponent } from './components/algorithm-paramete
     ActionTabComponent,
     AlgorithmParametersEditComponent,
     HomeComponent,
-    AlgorithmParameterItemComponent
+    AlgorithmParameterItemComponent,
+    FileListTabComponent
   ],
   imports: [
     BrowserModule,

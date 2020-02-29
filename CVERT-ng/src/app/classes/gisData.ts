@@ -47,7 +47,7 @@ export class GisData {
   }
 
   getGisFromDict(exif: any, xmp: any) {
-    if (exif.Model && xmp != {}) {
+    if (exif && exif.Model && xmp != {}) {
       this.altitude = xmp.RelativeAltitude;
       this.latitude = exif.latitude;
       this.longitude = exif.longitude;

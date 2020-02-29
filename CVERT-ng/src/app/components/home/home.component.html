@@ -30,15 +30,18 @@
       <div class="row" id="GPS-tab">
         <app-gps-tab *ngIf="topImage && gisService.gis" [(gisData)]="gisService.gis"></app-gps-tab>
       </div>
-      <div class="row" id="top-histogram">
-        <app-histogram-tab *ngIf="topImage" class="full-height full-width" [(histogramData)]="topImage.histogram"></app-histogram-tab>
+      <div class="row" id="file-list">
+        <app-file-list-tab class="full-height full-width"
+                            [(inputFiles)]="inputFiles"
+                            [(topImage)]="topImage"
+                            [(bottomImage)]="bottomImage"></app-file-list-tab>
       </div>
-      <div class="row" id="bottom-histogram">
+      <div class="row" id="histogram">
         <app-histogram-tab *ngIf="bottomImage" class="full-height full-width" [(histogramData)]="bottomImage.histogram"></app-histogram-tab>
       </div>
       <div class="row" id="actions-tab">
         <app-action-tab class="full-height full-width"
-                        [(topImage)]="topImage"
+                        [(inputFiles)]="inputFiles"
                         [(bottomImage)]="bottomImage"
                         [(filtersList)]="filtersList"></app-action-tab>
       </div>
