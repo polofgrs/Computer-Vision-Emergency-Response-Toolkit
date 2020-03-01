@@ -7,6 +7,8 @@ import { MatSliderModule } from '@angular/material/slider';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 
+import { Ng5SliderModule } from 'ng5-slider';
+
 import { NgModule } from '@angular/core';
 
 @NgModule ({
@@ -18,7 +20,8 @@ import { NgModule } from '@angular/core';
     MatSliderModule,
     MatButtonModule,
     MatCheckboxModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    Ng5SliderModule
   ],
   exports: [
     DragDropModule,
@@ -28,7 +31,8 @@ import { NgModule } from '@angular/core';
     MatSliderModule,
     MatButtonModule,
     MatCheckboxModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    Ng5SliderModule
   ]
 })
 

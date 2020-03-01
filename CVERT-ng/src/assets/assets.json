@@ -188,5 +188,35 @@
     "libName": "AODNet",
     "pyFunction": "Dehaze",
     "args": [{"type": "button"}]
+  }],
+
+  "miscFilters" : [{
+    "name": "Histogram",
+    "args": [
+      {
+        "name": "R",
+        "type": "range",
+        "low": 0,
+        "high": 255,
+        "min": 0,
+        "max": 255
+      },
+      {
+        "name": "G",
+        "type": "range",
+        "low": 0,
+        "high": 255,
+        "min": 0,
+        "max": 255
+      },
+      {
+        "name": "B",
+        "type": "range",
+        "low": 0,
+        "high": 255,
+        "min": 0,
+        "max": 255
+      }
+    ]
   }]
 }

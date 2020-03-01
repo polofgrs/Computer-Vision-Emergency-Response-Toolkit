@@ -10,7 +10,7 @@ import { GisData } from './gisData';
 
 export class ImageInstance {
 
-  jimpObject: any;
+  jimpObject: Jimp;
   uri: string;
   histogram: number[][];
   gisData: GisData;
@@ -57,33 +57,28 @@ export class ImageInstance {
     });
   }
 
-  applyFilterList(filtersList: Array<Filter>, server: ServerService) : Promise<any> {
-    var that = this;
+  applyFilterList(filtersList: Array<Filter>, server: ServerService) : Promise<Jimp> {
+    let that = this;
     return new Promise(async function(resolve, reject) {
       var result = that.jimpObject.clone();
       var jimpFilterArray = [];
       for (let filter of filtersList) {
         if (that.isJimp(filter)) {
-          var name = filter.filter.name;
           var args = [];
           for (let arg of filter.filter.args) {
             args.push(arg.value);
           }
-          jimpFilterArray.push({apply: name, params: args});
+          jimpFilterArray.push({apply: filter.filter.name, params: args});
         } else {
           if (jimpFilterArray.length > 0) {
-            console.log('color');
-            var result = result.color(jimpFilterArray);
+            result = result.color(jimpFilterArray);
             jimpFilterArray = [];
           }
-          var data = await server.send(filter.filter, that.uri, 'response');
-          result = await new Promise((resolve, reject) => {
-            var buffer = Buffer.from(data.image, 'base64');
-            Jimp.read(buffer)
-            .then(image => {
-              resolve(image);
-            });
-          })
+          if (that.isServer(filter)) {
+            result = await that.applyServerFilter(result, filter, server);
+          } else if (filter.filter.name == "Histogram") {
+            result = await that.applyHistogramEqualization(result, filter);
+          }
         }
       }
       if (jimpFilterArray.length > 0) {
@@ -101,20 +96,92 @@ export class ImageInstance {
     return(typeof found !== 'undefined');
   }
 
-  getHistogram(uri) : Observable<number[][]> {
+  isServer(filter: Filter) {
+    var found = assets.serverFilters.find(function(element) {
+      return(filter.filter.name == element.name);
+    });
+    return(typeof found !== 'undefined');
+  }
+
+  async applyServerFilter(image: Jimp, filter: Filter, server: ServerService): Promise<Jimp> {
+    let base64data = await image.getBase64Async(image.getMIME());
+    var data = await server.send(filter.filter, base64data, 'response');
+    return (await new Promise((resolve, reject) => {
+      var buffer = Buffer.from(data.image, 'base64');
+      Jimp.read(buffer).then(image => {
+        resolve(image);
+      });
+    }));
+  }
+
+  async applyHistogramEqualization(image: Jimp, filter: Filter): Promise<Jimp> {
+    //https://www.tutorialspoint.com/dip/histogram_equalization.htm
+
+    // getting the histogram
+    let base64data = await image.getBase64Async(image.getMIME());
+    let array: Uint8ClampedArray = await this.getImagePixelsFromURI(base64data).toPromise();
+    let histogram: number[][] = this.getHistList(array);
+
+    // getting the settings for the 3 ranges
+    var red = filter.filter.args.find(function(element) {
+      return(element.name == "R");
+    });
+    var green = filter.filter.args.find(function(element) {
+      return(element.name == "G");
+    });
+    var blue = filter.filter.args.find(function(element) {
+      return(element.name == "B");
+    });
+
+    // sum of pixels
+    const r_sum: number = histogram[0].reduce((a, b) => a + b, 0);
+    const g_sum: number = histogram[1].reduce((a, b) => a + b, 0);
+    const b_sum: number = histogram[2].reduce((a, b) => a + b, 0);
+
+    // probability mass function
+    const r_pmf: number[] = histogram[0].map(a => a / r_sum);
+    const g_pmf: number[] = histogram[1].map(a => a / g_sum);
+    const b_pmf: number[] = histogram[2].map(a => a / b_sum);
+
+    // cumulative distributive function
+    const r_cdf: number[] = r_pmf.map((sum => value => Math.min(sum += value, 1))(0));
+    const g_cdf: number[] = g_pmf.map((sum => value => Math.min(sum += value, 1))(0));
+    const b_cdf: number[] = b_pmf.map((sum => value => Math.min(sum += value, 1))(0));
+
+    // mapping list
+    const r_mapping: number[] = r_cdf.map(a => parseInt(red.low + a * (red.high - red.low)));
+    const g_mapping: number[] = g_cdf.map(a => parseInt(green.low + a * (green.high - green.low)));
+    const b_mapping: number[] = b_cdf.map(a => parseInt(blue.low + a * (blue.high - blue.low)));
+
+    // scanning each individual pixel and mapping to its new value
+    image.scan(0, 0, image.bitmap.width, image.bitmap.height, function(x, y, idx) {
+      this.bitmap.data[idx + 0] = r_mapping[this.bitmap.data[idx + 0]];
+      this.bitmap.data[idx + 1] = g_mapping[this.bitmap.data[idx + 1]];
+      this.bitmap.data[idx + 2] = b_mapping[this.bitmap.data[idx + 2]];
+    });
+
+    return image;
+  }
+
+  getHistList(imagePixels: Uint8ClampedArray): number[][] {
+    var rvals = this.array256(0);
+    var gvals = this.array256(0);
+    var bvals = this.array256(0);
+    var avals = this.array256(0);
+    for (let i = 0; i < imagePixels.length; i += 4) {
+      rvals[imagePixels[i]]++;
+      gvals[imagePixels[i+1]]++;
+      bvals[imagePixels[i+2]]++;
+      avals[imagePixels[i+3]]++;
+    }
+    return([rvals, gvals, bvals, avals]);
+  }
+
+  getHistogram(uri: string): Observable<number[][]> {
     return Observable.create((observer: Observer<number[][]>) => {
       this.getImagePixelsFromURI(uri).subscribe(imagePixels => {
-        var rvals = this.array256(0);
-        var gvals = this.array256(0);
-        var bvals = this.array256(0);
-        var avals = this.array256(0);
-        for (let i = 0; i < imagePixels.length; i += 4) {
-          rvals[imagePixels[i]]++;
-          gvals[imagePixels[i+1]]++;
-          bvals[imagePixels[i+2]]++;
-          avals[imagePixels[i+3]]++;
-        }
-        observer.next([rvals, gvals, bvals, avals]);
+        let result = this.getHistList(imagePixels);
+        observer.next(result);
       });
     });
   }

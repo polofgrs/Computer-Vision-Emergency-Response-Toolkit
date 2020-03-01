@@ -1,8 +1,10 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 import { Filter } from '../../classes/filter';
-import * as assets from '../../../assets/assets.json';
 import { FileService } from '../../services/file.service';
+
+import * as assets from '../../../assets/assets.json';
+import { Options } from 'ng5-slider';
 
 @Component({
   selector: 'app-filter-edit-tab',
@@ -16,12 +18,14 @@ export class FilterEditTabComponent implements OnInit {
 
   filters: any;
   serverFilters: any;
+  miscFilters: any;
   allFilters: any;
 
   constructor(private fileService: FileService) {
     this.filters = assets.filters;
     this.serverFilters = assets.serverFilters;
-    this.allFilters = this.filters.concat(this.serverFilters);
+    this.miscFilters = assets.miscFilters;
+    this.allFilters = this.filters.concat(this.serverFilters).concat(this.miscFilters);
   }
 
   ngOnInit() {
@@ -36,6 +40,15 @@ export class FilterEditTabComponent implements OnInit {
       )
     ));
     this.currentFilterChange.emit(this.currentFilter);
+  }
+
+  getRangeOptions(arg) {
+    let options: Options = {
+      floor: arg.min,
+      ceil: arg.max,
+      draggableRange: true
+    }
+    return options
   }
 
   openParameters() {

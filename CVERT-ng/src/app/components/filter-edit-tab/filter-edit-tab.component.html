@@ -20,6 +20,11 @@
             {{filter.name}}
           </mat-option>
         </mat-optgroup>
+        <mat-optgroup label="Miscellaneous">
+          <mat-option *ngFor="let filter of miscFilters" [value]="filter.name">
+            {{filter.name}}
+          </mat-option>
+        </mat-optgroup>
       </mat-select>
     </mat-form-field>
 
@@ -39,6 +44,15 @@
                name="color"
                [(ngModel)]="arg.value">
       </mat-form-field>
+
+      <div class="custom-slider">
+        <ng5-slider *ngIf="arg.type == 'range'"
+                    id="{{arg.name}}-slider"
+                    [(value)]="arg.low"
+                    [(highValue)]="arg.high"
+                    [options]="getRangeOptions(arg)">
+        </ng5-slider>
+      </div>
 
       <button mat-raised-button color="primary"
               *ngIf="arg.type == 'button'"
