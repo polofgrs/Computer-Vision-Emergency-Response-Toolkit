@@ -11,8 +11,11 @@ argparse
 matplotlib
 exif
 beautifulsoup4
+tornado
 
 flask
 flask_cors
 
 pyinstaller
+
+pypiwin32; sys_platform == 'win32'
