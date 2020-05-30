@@ -1,5 +1,6 @@
 import timer
-from exif import Image
+from PIL import Image
+from PIL.ExifTags import TAGS, GPSTAGS
 import os
 import bs4
 import cv2
@@ -27,13 +28,6 @@ def GpsFetch(sourcePath, targetPath, gpsTarget):
     return t.get_time()
 
 def getXMP(path):
-    # extracts XMP data from picture
-    fd = open(path, 'rb')
-    # exif
-    image = Image(fd)
-    if image.has_exif:
-        xdimension = image.pixel_x_dimension
-        ydimension = image.pixel_y_dimension
     # XMP
     fd = open(path, 'rb')
     d = fd.read()
@@ -42,15 +36,39 @@ def getXMP(path):
     xmp_str = d[xmp_start:xmp_end + 12]
     soup = bs4.BeautifulSoup(xmp_str.decode(), 'html.parser')
     rdf = soup.find('rdf:description')
+    # extracts Exif data from picture
+    image = Image.open(path)
+    xdimension, ydimension = image.size
     try:
-        altitude = float(rdf['drone-dji:relativealtitude'])
+        exif_data = {}
+        info = image._getexif()
+        if info:
+            for tag, value in info.items():
+                decoded = TAGS.get(tag, tag)
+                if decoded == "GPSInfo":
+                    gps_data = {}
+                    for t in value:
+                        sub_decoded = GPSTAGS.get(t, t)
+                        gps_data[sub_decoded] = value[t]
+                    exif_data[decoded] = gps_data
+                else:
+                    exif_data[decoded] = value
+        if (exif_data):
+            latitude, longitude = get_lat_lng(exif_data)
+        print('Got lat/lon from exif')
+    except Exception:
         latitude = float(rdf['drone-dji:gpslatitude'])
-        heading = float(rdf['drone-dji:gimbalyawdegree'])
-        pitch = float(rdf['drone-dji:gimbalpitchdegree'])
         try:  # thank you DJI for the typo...
             longitude = float(rdf['drone-dji:gpslongitude'])
         except Exception:
             longitude = float(rdf['drone-dji:gpslongtitude'])
+        print('got lat/lon from XMP')
+    if latitude == None or longitude == None:
+        print('Could not get lat/lng from exif nor XMP')
+    try:
+        altitude = float(rdf['drone-dji:relativealtitude'])
+        heading = float(rdf['drone-dji:gimbalyawdegree'])
+        pitch = float(rdf['drone-dji:gimbalpitchdegree'])
         print("XMP found for " + path)
         resultDict = {
             "xdimension": xdimension,
@@ -143,3 +161,43 @@ def unWrap(hdg):
     while hdg < -math.pi:
         hdg += 2 * math.pi
     return hdg
+
+############# Helper functions #####################
+
+def get_lat_lng(exif_data):
+    lat = None
+    lng = None
+    if "GPSInfo" in exif_data:      
+        gps_info = exif_data["GPSInfo"]
+        gps_latitude = get_if_exist(gps_info, "GPSLatitude")
+        gps_latitude_ref = get_if_exist(gps_info, 'GPSLatitudeRef')
+        gps_longitude = get_if_exist(gps_info, 'GPSLongitude')
+        gps_longitude_ref = get_if_exist(gps_info, 'GPSLongitudeRef')
+        if gps_latitude and gps_latitude_ref and gps_longitude and gps_longitude_ref:
+            lat = convert_to_degress(gps_latitude)
+            if gps_latitude_ref != "N":                     
+                lat = 0 - lat
+            lng = convert_to_degress(gps_longitude)
+            if gps_longitude_ref != "E":
+                lng = 0 - lng
+    return lat, lng
+
+def get_if_exist(data, key):
+    if key in data:
+        return data[key]
+    return None
+
+def convert_to_degress(value):
+    d0 = value[0][0]
+    d1 = value[0][1]
+    d = float(d0) / float(d1)
+
+    m0 = value[1][0]
+    m1 = value[1][1]
+    m = float(m0) / float(m1)
+
+    s0 = value[2][0]
+    s1 = value[2][1]
+    s = float(s0) / float(s1)
+
+    return d + (m / 60.0) + (s / 3600.0)

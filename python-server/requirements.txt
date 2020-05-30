@@ -9,7 +9,7 @@ scikit-learn
 spectral
 argparse
 matplotlib
-exif
+pillow
 beautifulsoup4
 tornado
 

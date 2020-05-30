@@ -2,7 +2,7 @@
   "name": "cvert-ng",
   "description": "Computer Vision Emergency Toolkit",
   "homepage": "http://cver.hrail.crasar.org/",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "author": {
     "name": "Paul Faugeras",
     "email": "polofgrs@gmail.com"
